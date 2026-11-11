@@ -5,8 +5,21 @@
 
 ## 1. Event schema
 
-Property ร่วมทุก event: `user_id` (anonymous UUID), `session_id`, `app_version`, `platform`, `lang`, `client_ts`, server timestamp ของ PostHog
+Property ร่วมทุก event: `user_id` (Supabase user UUID ไม่ใช่ account ID ของ Apple/Google), `session_id`, `app_version`, `platform`, `lang`, `client_ts`, server timestamp ของ PostHog
 ห้ามมีใน event: พิกัด, ชื่อ, เบอร์โทร, free-text
+
+### Auth (D-011)
+
+| Event | เกิดเมื่อ | Properties |
+|---|---|---|
+| `auth_screen_shown` | หน้า login แสดง | `platform` |
+| `auth_method_selected` | แตะปุ่ม Apple หรือ Google | `method` |
+| `auth_completed` | เข้าสู่ระบบสำเร็จ | `method`, `is_new_user`, `duration_ms` |
+| `auth_cancelled` / `auth_failed` | ยกเลิกหรือผิดพลาด | `method`, `reason` |
+| `identity_linked` / `identity_unlinked` | เชื่อมหรือยกเลิกช่องทาง | `method` |
+| `signed_out`, `account_deleted` | ออกจากระบบ, ลบบัญชี | `scope` |
+
+Event ก่อน login ส่งด้วย anonymous device ID ของ PostHog และรวมกับ `user_id` เมื่อ login สำเร็จ ต้องอยู่ใต้ consent analytics เดียวกัน
 
 ### Solo
 
@@ -27,7 +40,6 @@ Property ร่วมทุก event: `user_id` (anonymous UUID), `session_id`, 
 | `map_opened` | เปิดแผนที่ | `decision_id`, `provider` |
 | `feedback_submitted` | 👍/👎 | `decision_id`, `rating` |
 | `feedback_reason` | เลือกเหตุผล | `decision_id`, `reason` |
-| `user_data_deleted` | ลบข้อมูลสำเร็จ | `scope` |
 
 ### Kampai (เฉพาะต้นแบบใน MVP1 ใช้จริงใน MVP1.5)
 
@@ -59,6 +71,8 @@ Property ร่วมทุก event: `user_id` (anonymous UUID), `session_id`, 
 
 | Guardrail | นิยาม | เหตุผล |
 |---|---|---|
+| Auth completion rate | ผู้ใช้ที่มี `auth_completed` ÷ ผู้ใช้ที่มี `auth_screen_shown` แยกตาม platform และ method | D-011 วาง login ก่อนเห็นคุณค่า drop-off ตรงนี้ไม่ปรากฏใน TTY (R-007) |
+| Activation | ผู้ใช้ที่มี `criteria_completed` ครั้งแรก ÷ ผู้ใช้ที่มี `auth_screen_shown` | วัดผลรวมของ login ต่อการเริ่มใช้งานจริง |
 | Time to Criteria | `criteria_completed.ts − session_start.ts` (median, P90) | D-001 ตัดช่วงนี้ออกจาก TTY จึงต้องดูแยก ไม่ให้เวลาย้ายไปซ่อนที่หน้าแรก |
 | End-to-end time | `decision_confirmed.ts − session_start.ts` | ตัวเลขที่ตรงกับคำสัญญา "30 วินาที" ในมุมผู้ใช้ |
 | Relevance | สัดส่วน 👍 ต่อ feedback ทั้งหมด, อัตรา reroll ต่อ session | ตัดสินใจเร็วแต่ไม่ถูกใจไม่ถือว่าสำเร็จ |

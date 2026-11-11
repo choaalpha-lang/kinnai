@@ -15,12 +15,13 @@ Solo diner ในกรุงเทพฯ (พนักงานออฟฟิ�
 
 ## 3. ขอบเขต
 
-**In scope:** SOLO-001 ถึง 005, GRP-001 (ต้นแบบ), PLAT-001 ถึง 003, PRIV-001, ANL-001
+**In scope:** AUTH-001, SOLO-001 ถึง 005, GRP-001 (ต้นแบบ), PLAT-001 ถึง 003, PRIV-001, ANL-001
 
-**Out of scope ใน MVP1 (D-008):** การชำระเงินและ subscription · Kampai ที่ใช้งานจริงหลายคน · referral · affiliate และ sponsored result · merchant portal · การแนะนำด้วย LLM · หน้าสมัครสมาชิก (A-006) · รีวิวหรือรูปที่ผู้ใช้สร้าง
+**Out of scope ใน MVP1 (D-008):** การชำระเงินและ subscription · Kampai ที่ใช้งานจริงหลายคน · referral · affiliate และ sponsored result · merchant portal · การแนะนำด้วย LLM · LINE Login, OTP, อีเมลและรหัสผ่าน (D-011) · รีวิวหรือรูปที่ผู้ใช้สร้าง
 
 ## 4. User flow หลัก
 
+0. ครั้งแรกเท่านั้น: หน้า login เลือก Apple หรือ Google แล้วยืนยัน (D-011)
 1. เปิดแอป เห็นหน้าแรกพร้อมค่าที่เลือกไว้ครั้งก่อน
 2. ปรับงบ แนว ระยะ (ถ้าต้องการ) แล้วกด "ช่วยเลือกให้หน่อย" → นาฬิกา TTY เริ่ม (D-001)
 3. เห็นไม่เกิน 3 ร้านพร้อมเหตุผล กด "กินร้านนี้" หรือขอชุดใหม่
@@ -42,7 +43,7 @@ Solo diner ในกรุงเทพฯ (พนักงานออฟฟิ�
 Managed modular monolith ตาม D-006
 
 - **Mobile:** Expo + React Native + TypeScript · โมดูล `decision`, `preferences`, `feedback`, `analytics`
-- **Backend:** Supabase Postgres + Auth (anonymous) + RLS · Edge Function `search-places` (ห่อ provider, rate limit, cost cap) และ `confirm-decision` (idempotent)
+- **Backend:** Supabase Postgres + Auth (Sign in with Apple, Google) + RLS · Edge Function `search-places` (ห่อ provider, rate limit, cost cap) และ `confirm-decision` (idempotent)
 - **ภายนอก:** Places provider (Q-001) · แอปแผนที่ของเครื่อง · PostHog · Sentry
 - ไม่มี AI call ใน MVP1
 
@@ -54,13 +55,13 @@ Managed modular monolith ตาม D-006
 
 | หัวข้อ | แนวทางใน MVP1 | มาตรา |
 |---|---|---|
-| ข้อมูลที่เก็บ | Anonymous user ID, ความชอบ, ประวัติการตัดสินใจ, feedback ไม่เก็บชื่อ อีเมล หรือพิกัดดิบ | ม.22 (เก็บเท่าที่จำเป็น) |
+| ข้อมูลที่เก็บ | Account ID จาก Apple/Google, ชื่อที่แสดง, ความชอบ, ประวัติการตัดสินใจ, feedback ไม่เก็บพิกัดดิบ การขออีเมลยังเปิดอยู่ (Q-009) | ม.22 (เก็บเท่าที่จำเป็น) |
 | ตำแหน่ง | ใช้เฉพาะขณะค้นหา ส่งไป Edge Function แล้วไม่บันทึก มีทางเลือก "เลือกย่านเอง" | ม.19, ม.22 |
 | ฐานทางกฎหมาย | ข้อเสนอ: consent สำหรับตำแหน่งและ analytics, สัญญาสำหรับการให้บริการหลัก ต้องยืนยันใน SPIKE-002 | ม.19, ม.24 |
 | การแจ้ง | Privacy notice ภาษาไทยก่อนเก็บข้อมูล | ม.23 |
 | Retention | ต้องประกาศตัวเลข ข้อเสนอใน A-005 ยังรอตัดสิน (Q-002) | ม.23, ม.37(3) |
 | สิทธิเจ้าของข้อมูล | ลบข้อมูลในแอป, ถอน consent ได้, ช่องทางติดต่อ controller | ม.19, ม.30–36 |
-| โอนไปต่างประเทศ | Supabase, PostHog, Sentry, Places provider อยู่นอกไทย ต้องระบุฐานการโอน (Q-004) | ม.28–29 |
+| โอนไปต่างประเทศ | Supabase, PostHog, Sentry, Places provider, Apple และ Google (ผู้ให้บริการ login) อยู่นอกไทย ต้องระบุฐานการโอน (Q-004) | ม.28–29 |
 | เหตุละเมิด | Runbook แจ้ง สคส. ภายใน 72 ชั่วโมง | ม.37(4) |
 | ผู้เยาว์ | ยังไม่มีนโยบาย (Q-003) กลุ่มเป้าหมายมีนักศึกษา | ม.20 |
 | DPO / ROPA | ตรวจว่าเข้าเกณฑ์หรือได้ข้อยกเว้นหรือไม่ | ม.39, ม.41 |
@@ -76,6 +77,7 @@ Managed modular monolith ตาม D-006
 ## 9. Information architecture
 
 ```
+เข้าสู่ระบบ (ครั้งแรก): Apple · Google
 กินไหน (Solo)
 ├─ หน้าแรก: งบ · แนว · ระยะ · ตำแหน่ง/ย่าน
 ├─ กำลังค้นหา
@@ -84,8 +86,9 @@ Managed modular monolith ตาม D-006
 Kampai (ต้นแบบ ข้อมูลจำลอง)
 └─ สร้าง → ชวน → จับคู่ → โหวต → ยืนยัน
 ฉัน
+├─ บัญชีที่เชื่อมไว้ · ออกจากระบบ
 ├─ ความชอบที่จำไว้ · ร้านที่ถูกใจ/ซ่อน
 ├─ มื้อล่าสุด
-├─ ข้อมูลและความเป็นส่วนตัว (notice, ถอน consent, ลบข้อมูล)
+├─ ข้อมูลและความเป็นส่วนตัว (notice, ถอน consent, ลบบัญชีและข้อมูล)
 └─ ภาษา
 ```

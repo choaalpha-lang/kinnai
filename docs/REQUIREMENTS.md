@@ -1,22 +1,53 @@
 # KinNai MVP1 — Requirements
 
-ขอบเขต: MVP1 (M0–3) เท่านั้น · ต้นแบบอ้างอิง: `prototype/index.html` · การตัดสินใจอ้างอิง: `docs/DECISION_LOG.md`
+ขอบเขต: MVP1 (M0–3) เท่านั้น · แก้ไขล่าสุด 2026-11-11: เพิ่ม AUTH-001 ตาม D-011, D-012 · ต้นแบบอ้างอิง: `prototype/index.html` · การตัดสินใจอ้างอิง: `docs/DECISION_LOG.md`
 
 ทุก requirement ใช้ Definition of Done ร่วมกัน (§9) Event ทั้งหมดนิยามใน `docs/ANALYTICS_PLAN.md`
 
 | ID | Capability | MoSCoW | ขึ้นกับ |
 |---|---|---|---|
-| SOLO-001 | เลือกงบ ประเภทอาหาร และระยะ | Must | PLAT-001, PRIV-001 |
+| AUTH-001 | เข้าสู่ระบบด้วย Apple หรือ Google และเชื่อมบัญชี | Must | PLAT-001, PLAT-002 |
+| SOLO-001 | เลือกงบ ประเภทอาหาร และระยะ | Must | PLAT-001, PRIV-001, AUTH-001 |
 | SOLO-002 | แนะนำไม่เกิน 3 ร้านพร้อมเหตุผล | Must | SOLO-001, PLAT-003 |
 | SOLO-003 | ยืนยันการตัดสินใจและบันทึก Time to Yes | Must | SOLO-002, PLAT-002, ANL-001 |
 | SOLO-004 | เปิดแผนที่นำทางภายนอก | Must | SOLO-003 |
 | SOLO-005 | Feedback และการจำความชอบ | Should | SOLO-003, PLAT-002 |
 | GRP-001 | Kampai clickable prototype (ข้อมูลจำลอง) | Could | ไม่มี (ส่งมอบแล้วเป็น HTML) |
 | PLAT-001 | App shell, i18n, design tokens, CI | Must | Gate 2 |
-| PLAT-002 | Supabase schema, anonymous auth, RLS | Must | PLAT-001 |
+| PLAT-002 | Supabase schema, Auth (Apple, Google), RLS | Must | PLAT-001 |
 | PLAT-003 | Places adapter ฝั่ง server, rate limit, cost cap | Must | SPIKE-001, PLAT-002 |
 | PRIV-001 | Consent ตำแหน่ง, privacy notice, ลบข้อมูล | Must | SPIKE-002, PLAT-002 |
 | ANL-001 | Event instrumentation และ dashboard | Must | PLAT-001 |
+
+---
+
+## AUTH-001 — เข้าสู่ระบบด้วย Apple หรือ Google และเชื่อมบัญชี
+
+**User story:** ในฐานะผู้ใช้ใหม่ ฉันอยากเข้าสู่ระบบด้วยบัญชีที่มีอยู่แล้วในเครื่องด้วยการแตะไม่เกิน 2 ครั้ง โดยไม่ต้องกรอกอะไร
+
+**Business value:** ทุกการตัดสินใจผูกกับบัญชีจริง (D-011) รองรับการ sync ข้ามเครื่องและฟีเจอร์ MVP1.5 ที่ต้องมีตัวตนผู้ใช้
+
+**Acceptance criteria**
+
+1. Given ผู้ใช้ยังไม่ได้เข้าสู่ระบบ When เปิดแอป Then เห็นหน้า login หน้าเดียวที่มีปุ่ม "ดำเนินการต่อด้วย Apple" และ "ดำเนินการต่อด้วย Google" โดย iOS แสดง Apple ก่อน และ Android แสดง Google ก่อน
+2. Given ผู้ใช้แตะปุ่มช่องทางใดช่องทางหนึ่ง When ยืนยันในหน้าของระบบปฏิบัติการ Then เข้าหน้าแรกของ Solo ทันที ไม่มีฟอร์มหรือหน้าตั้งโปรไฟล์ รวมไม่เกิน 2 แตะ
+3. Given ผู้ใช้เคยเข้าสู่ระบบแล้ว When เปิดแอปอีกครั้ง Then เข้าหน้าแรกโดยไม่เห็นหน้า login
+4. Given ผู้ใช้ยกเลิกหรือ login ล้มเหลว When กลับมาที่แอป Then อยู่หน้า login เดิม เห็นข้อความบอกสาเหตุ และเลือกช่องทางอื่นได้
+5. Given ผู้ใช้เข้าสู่ระบบด้วยช่องทางหนึ่ง When กด "เชื่อมบัญชี" อีกช่องทางในแท็บ "ฉัน" และยืนยัน Then เข้าสู่ระบบด้วยช่องทางใดก็ได้แล้วเห็นข้อมูลชุดเดียวกัน (D-012)
+6. Given ช่องทางที่จะเชื่อมผูกกับบัญชี KinNai อื่นอยู่แล้ว When พยายามเชื่อม Then แจ้งให้ทราบและไม่รวมข้อมูลอัตโนมัติ
+7. Given เหลือช่องทางเดียว When ดูรายการบัญชีที่เชื่อม Then ไม่มีปุ่มยกเลิกการเชื่อมของช่องทางนั้น
+8. Given ผู้ใช้กด "ลบบัญชีและข้อมูล" และยืนยัน When สำเร็จ Then บัญชีและข้อมูลทั้งหมดถูกลบ token ของ Apple ถูก revoke และผู้ใช้กลับไปหน้า login
+9. Given ผู้ใช้กด "ออกจากระบบ" When เข้าสู่ระบบใหม่ด้วยช่องทางเดิม Then ความชอบและประวัติยังอยู่
+
+**Edge cases:** ไม่มีเครือข่ายตอน login (แจ้งและให้ลองใหม่) · ผู้ใช้ Apple เลือกซ่อนอีเมล (ต้องทำงานได้ปกติ) · ผู้ใช้ถอนสิทธิ์ KinNai จากหน้าตั้งค่าของ Apple/Google (session ถูกยกเลิกและกลับหน้า login) · refresh token หมดอายุ · Android ที่ไม่มีบัญชี Google ในเครื่อง
+
+**Security / privacy:** ใช้ native sign-in แล้วแลก ID token กับ Supabase Auth ตรวจ nonce · ขอ scope ต่ำสุด ไม่ขออีเมลถ้าไม่จำเป็น (Q-009, PDPA ม.22) · เก็บ session ใน secure storage ของเครื่อง · การรับทราบ privacy notice อยู่ในหน้า login แต่ consent ตำแหน่งและ analytics ขอแยก (ม.19) · มีการลบบัญชีในแอปตามข้อกำหนดของ App Store (5.1.1(v)) และ Google Play · ต้องมี Sign in with Apple เพราะมี Google login (Guideline 4.8)
+
+**Analytics:** `auth_screen_shown`, `auth_method_selected`, `auth_completed` (method, is_new_user), `auth_cancelled`, `auth_failed` (reason), `identity_linked`, `identity_unlinked`, `signed_out`, `account_deleted`
+
+**Tests:** unit (ลำดับปุ่มตาม platform, กติกาช่องทางสุดท้าย) · integration (แลก token, link identity, RLS หลัง link) · manual บนอุปกรณ์จริงทั้งสองค่าย รวมกรณียกเลิกและลบบัญชี
+
+**ความเสี่ยงที่รู้แล้ว:** R-006 (App Store review) และ R-007 (drop-off ที่วัดไม่เห็นใน TTY)
 
 ---
 
@@ -28,7 +59,7 @@
 
 **Acceptance criteria**
 
-1. Given ผู้ใช้เปิดแอปครั้งแรก When หน้าแรกแสดง Then เห็นตัวเลือกงบ 4 ระดับ (≤฿100, ฿101–200, ฿201–400, ฿400+), ประเภทอาหาร (รวม "อะไรก็ได้") และระยะ (500 ม., 1, 2, 5 กม.) โดยมีค่าเริ่มต้นเลือกไว้แล้ว
+1. Given ผู้ใช้เข้าสู่ระบบครั้งแรกแล้ว When หน้าแรกแสดง Then เห็นตัวเลือกงบ 4 ระดับ (≤฿100, ฿101–200, ฿201–400, ฿400+), ประเภทอาหาร (รวม "อะไรก็ได้") และระยะ (500 ม., 1, 2, 5 กม.) โดยมีค่าเริ่มต้นเลือกไว้แล้ว
 2. Given ผู้ใช้เคยใช้งานแล้ว When เปิดแอปอีกครั้ง Then ค่าที่เลือกครั้งก่อนถูกเลือกไว้ให้
 3. Given ผู้ใช้เลือกงบระดับใดระดับหนึ่ง When ระบบค้นหา Then ร้านที่ราคาต่ำกว่าเพดานของระดับนั้นทั้งหมดเข้าเกณฑ์ (D-002) และร้านที่อยู่ในช่วงของระดับนั้นได้คะแนนจัดอันดับเพิ่ม
 4. Given ผู้ใช้อนุญาตตำแหน่ง When กด "ช่วยเลือกให้หน่อย" Then ระบบใช้ตำแหน่งปัจจุบันเป็นจุดศูนย์กลาง และส่ง event `criteria_completed`
@@ -159,7 +190,7 @@ Expo + React Native + TypeScript (strict) · 3 แท็บ (กินไหน,
 
 ## PLAT-002 — Supabase schema, auth, RLS
 
-ตาราง: `profiles`, `preferences`, `decision_sessions`, `decisions`, `feedback`, `consent_log` · Anonymous sign-in (A-006) · RLS ทุกตาราง
+ตาราง: `profiles`, `preferences`, `decision_sessions`, `decisions`, `feedback`, `consent_log` · Supabase Auth ด้วย Apple และ Google (D-011) · RLS ทุกตาราง
 **AC:** Given ผู้ใช้ A When query ข้อมูลของ B ด้วย anon key Then ได้ 0 แถว (ทดสอบอัตโนมัติทุกตาราง) · Given migration ใหม่ Then ตารางที่ไม่มี RLS policy ทำให้ CI fail · service role key ไม่ปรากฏใน client bundle (ตรวจใน CI)
 
 ## PLAT-003 — Places adapter
@@ -172,7 +203,7 @@ Edge Function เดียวที่ห่อ provider หลัง interface 
 **AC**
 1. Given ผู้ใช้ใหม่ When ก่อนขอสิทธิ์ตำแหน่งของระบบ Then เห็นคำอธิบายวัตถุประสงค์เป็นภาษาไทย และเลือก "เลือกย่านเอง" ได้โดยไม่เสียฟังก์ชันหลัก
 2. Given ผู้ใช้เปิด privacy notice When อ่าน Then พบรายการตาม PDPA ม.23: วัตถุประสงค์, ข้อมูลที่เก็บ, ระยะเวลาเก็บ, ผู้รับข้อมูล, ช่องทางติดต่อ controller, สิทธิของเจ้าของข้อมูล
-3. Given ผู้ใช้กด "ลบข้อมูลของฉัน" และยืนยัน When สำเร็จ Then ข้อมูลใน `preferences`, `decisions`, `feedback`, `decision_sessions` ของผู้ใช้ถูกลบ และ PostHog person ถูกลบ (ม.33)
+3. Given ผู้ใช้กด "ลบบัญชีและข้อมูล" และยืนยัน When สำเร็จ Then บัญชีใน Supabase Auth และข้อมูลใน `preferences`, `decisions`, `feedback`, `decision_sessions` ของผู้ใช้ถูกลบ และ PostHog person ถูกลบ (ม.33)
 4. Given ผู้ใช้ให้หรือถอน consent When เกิดขึ้น Then บันทึกใน `consent_log` พร้อมเวลาและเวอร์ชันของ notice (ม.19)
 5. Given analytics When ผู้ใช้ยังไม่ยอมรับ Then ไม่ส่ง event ที่ไม่จำเป็นต่อการให้บริการ
 

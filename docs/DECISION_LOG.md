@@ -17,9 +17,13 @@
 | D-007 | ขอบเขต spec | เฉพาะ MVP1 เข้า detailed specification | Blueprint V1.2 | REQUIREMENTS |
 | D-008 | สิ่งที่ไม่ทำใน MVP1 | Production payments, referral, merchant portal, LLM recommendation | Blueprint V1.2 | PRD §3 |
 | D-009 | งบ MVP | เพดานวางแผน THB 45,000 (ทบทวนได้) | Blueprint V1.2 | GATE1 §5 |
+| D-011 | Login | บังคับ login ตอนเปิดแอป (ก่อนหน้าแรก) ด้วย Sign in with Apple และ Google เท่านั้น LINE Login เลื่อนไปหลัง MVP1 แทนที่ A-006 | Founder 2026-11-11 | AUTH-001, PLAT-002, PRIV-001 |
+| D-012 | Link account | หนึ่งบัญชี KinNai เชื่อมได้ทั้ง Apple และ Google ต้องเหลืออย่างน้อย 1 ช่องทาง | Founder 2026-11-11 | AUTH-001 |
 | D-010 | Traceability | Requirement ID แยกจาก Linear issue ID ห้ามแต่ง Linear ID | Blueprint V1.2 | LINEAR_WORKFLOW |
 
-## 2. Assumptions รอ Founder ยืนยัน
+## 2. Assumptions
+
+**สถานะ 2026-11-11:** A-001 ถึง A-005 Founder ยืนยันแล้ว ถือเป็น Confirmed · A-006 **ถูกยกเลิก** แทนด้วย D-011
 
 | ID | เกี่ยวกับ | สิ่งที่ Claude Code ตีความ | เหตุผล | ถ้าไม่ยืนยัน |
 |---|---|---|---|---|
@@ -28,7 +32,7 @@
 | A-003 | D-004 | งดออกเสียงไม่นับเป็นคะแนนให้ร้านใด แต่ยังอยู่ในตัวหารของ participation rate | สอดคล้องกับ blueprint ที่ให้บันทึกการไม่ตอบเพื่อไม่ให้ KPI ดูดีเกินจริง | ต้องนิยามตัวหารใหม่ |
 | A-004 | D-003 | ต้องมีอย่างน้อย 2 เสียง (รวม organizer) จึงปิดโหวตได้ | ป้องกัน "group decision" ที่มีคนเดียวตัดสิน | Organizer ปิดได้ทันทีด้วยเสียงเดียว |
 | A-005 | D-005 | ข้อเสนอ retention: ประวัติการตัดสินใจ 12 เดือน, ไม่เก็บพิกัดดิบ (ใช้ในคำขอแล้วทิ้ง), consent log เก็บตลอดอายุบัญชี + ระยะที่จำเป็นทางกฎหมาย | PDPA ไม่กำหนดตัวเลข แต่บังคับให้แจ้งระยะเวลา (ม.23) และลบเมื่อพ้นความจำเป็น (ม.37(3)) | ต้องมีตัวเลขอื่นก่อนเขียน privacy notice |
-| A-006 | D-006 | MVP1 ใช้ Supabase anonymous sign-in ไม่มีหน้าสมัครสมาชิก | ลด friction ต่อ TTY และลดข้อมูลส่วนบุคคลที่เก็บ (data minimization ม.22) | ต้องเพิ่ม requirement เรื่อง Auth |
+| ~~A-006~~ (ยกเลิก) | D-006 | MVP1 ใช้ Supabase anonymous sign-in ไม่มีหน้าสมัครสมาชิก | ลด friction ต่อ TTY และลดข้อมูลส่วนบุคคลที่เก็บ (data minimization ม.22) | ต้องเพิ่ม requirement เรื่อง Auth |
 
 ## 3. Hypotheses (ยังไม่มีหลักฐาน)
 
@@ -52,6 +56,7 @@
 | Q-005 | พื้นที่เปิดตัว (ย่านใดในกรุงเทพฯ) | Founder | Gate 2 | Open |
 | Q-006 | การเชื่อม Linear workspace | Founder | ก่อนสร้าง issue จริง | Open: session นี้ไม่มี Linear tool |
 | Q-007 | Default branch ของ repo | Founder | ก่อนเปิด PR | Open: repo ไม่มี `main` |
+| Q-009 | ต้องขออีเมลจาก Apple/Google หรือใช้เฉพาะ account ID | Founder | Gate 2 | Open (ข้อเสนอ: ไม่ขออีเมล) |
 | Q-008 | GRP-001 จะ port เข้าแอปจริงใน MVP1 หรือใช้ HTML prototype ที่มีแล้ว | Founder | Gate 2 | Open (ข้อเสนอ: ใช้ HTML ที่มีแล้ว) |
 
 ## 5. Risks
@@ -62,4 +67,6 @@
 | R-002 | เงื่อนไข license ห้าม cache ทำให้ต้นทุนต่อคำขอสูง | สูง | เลือก provider จากเงื่อนไข cache, ตั้ง daily cap และ kill switch |
 | R-003 | ภาระ PDPA ของ data controller ตกที่ Founder คนเดียว | กลาง | Data minimization, anonymous auth, ไม่เก็บพิกัดดิบ |
 | R-004 | KPI TTY ดูดีกว่าประสบการณ์จริง | กลาง | A-001, A-002 และรายงานคู่กับ completion rate |
+| R-006 | Apple ปฏิเสธแอปเพราะบังคับ login ทั้งที่ฟังก์ชันหลักไม่จำเป็นต้องใช้บัญชี (Guideline 5.1.1(v)) | สูง | เตรียมเหตุผลว่าบัญชีจำเป็นต่อการ sync ความชอบและประวัติ, มีทางถอย: ย้าย login ไปหลังผลแนะนำ (ค2) โดยไม่ต้องแก้โครงสร้าง |
+| R-007 | Drop-off ที่หน้า login ไม่ปรากฏใน TTY และ completion rate | กลาง | Guardrail `auth_completion_rate` ใน ANALYTICS_PLAN §4 |
 | R-005 | ขอบเขตบาน (Kampai จริง, Plus) ก่อนพิสูจน์ Solo | กลาง | Stage gate, GRP-001 เป็น Could |

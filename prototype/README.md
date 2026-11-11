@@ -5,7 +5,7 @@ Review artifact for the Gate 1 decision. Synthetic data only; no backend, no rea
 - `index.html` — open directly in a browser (standalone copy).
 - `kinnai-prototype.html` — the same page without the document wrapper (source used for publishing).
 
-Covers SOLO-001…005 and GRP-001 (Kampai, simulated friends), with a review console showing
+Covers AUTH-001 (simulated Apple / Google sign-in and account linking), SOLO-001…005 and GRP-001 (Kampai, simulated friends), with a review console showing
 Time to Yes, scenario simulation (slow / one result / no result / provider error / location denied),
 requirement coverage and the analytics events the app would emit.
 
