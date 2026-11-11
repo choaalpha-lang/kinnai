@@ -12,14 +12,15 @@ Property ร่วมทุก event: `user_id` (Supabase user UUID ไม่ใ
 
 | Event | เกิดเมื่อ | Properties |
 |---|---|---|
-| `auth_screen_shown` | หน้า login แสดง | `platform` |
+| `auth_screen_shown` | หน้า login แสดง | `platform`, `trigger` (confirm_decision / me_tab) |
+| `auth_dismissed` | กด "กลับไปดูร้าน" หรือ "ไว้ทีหลัง" | `had_pending_decision` |
 | `auth_method_selected` | แตะปุ่ม Apple หรือ Google | `method` |
 | `auth_completed` | เข้าสู่ระบบสำเร็จ | `method`, `is_new_user`, `duration_ms` |
 | `auth_cancelled` / `auth_failed` | ยกเลิกหรือผิดพลาด | `method`, `reason` |
 | `identity_linked` / `identity_unlinked` | เชื่อมหรือยกเลิกช่องทาง | `method` |
 | `signed_out`, `account_deleted` | ออกจากระบบ, ลบบัญชี | `scope` |
 
-Event ก่อน login ส่งด้วย anonymous device ID ของ PostHog และรวมกับ `user_id` เมื่อ login สำเร็จ ต้องอยู่ใต้ consent analytics เดียวกัน
+ตาม D-011 (ค2) event ของ Solo ตั้งแต่ `session_start` ถึง `shortlist_shown` เกิดก่อน login ได้ Event ก่อน login ส่งด้วย anonymous device ID ของ PostHog และรวมกับ `user_id` เมื่อ login สำเร็จ ต้องอยู่ใต้ consent analytics เดียวกัน
 
 ### Solo
 
@@ -35,7 +36,7 @@ Event ก่อน login ส่งด้วย anonymous device ID ของ Pos
 | `shortlist_rerolled` | ขอชุดใหม่ | `reroll_index` |
 | `filters_relaxed` | ขยายเงื่อนไข | ค่าใหม่ |
 | `recommendation_failed` | error/timeout/cap | `reason` |
-| `decision_confirmed` | กด "กินร้านนี้" | `decision_id`, `place_id`, `time_to_yes_ms`, `time_to_criteria_ms`, `rerolls`, `backgrounded`, `within_target` |
+| `decision_confirmed` | กด "กินร้านนี้" | `decision_id`, `place_id`, `time_to_yes_ms`, `time_to_criteria_ms`, `rerolls`, `backgrounded`, `within_target`, `included_auth` |
 | `session_abandoned` | เริ่มมื้อใหม่โดยไม่ยืนยัน หรือเงียบเกิน 10 นาที | `at_screen`, `had_shortlist` |
 | `map_opened` | เปิดแผนที่ | `decision_id`, `provider` |
 | `feedback_submitted` | 👍/👎 | `decision_id`, `rating` |
@@ -51,6 +52,7 @@ Event ก่อน login ส่งด้วย anonymous device ID ของ Pos
 
 **Solo Time to Yes** = `decision_confirmed.ts − criteria_completed.ts` โดยใช้ `criteria_completed` ที่ `is_first_in_session = true` (D-001, A-001)
 - รายงาน median และ P90 ต่อสัปดาห์ เป้า median ≤ 30 วินาที
+- การตัดสินใจครั้งแรกของผู้ใช้ใหม่มีขั้นตอน login อยู่ในช่วงเวลานี้ (`included_auth = true`) ให้รายงาน 2 ชุด: รวมทั้งหมด และเฉพาะ `included_auth = false` โดยตัวเลขที่ใช้เทียบเป้าต้องระบุชัดว่าเป็นชุดใด
 - คำนวณจากช่วงเวลาที่วัดฝั่ง client (monotonic) และตรวจกับ server timestamp ถ้าต่างเกิน 5 วินาทีให้ติดธงและตัดออกจาก P90
 
 **Decision completion rate** = sessions ที่มี `decision_confirmed` ÷ sessions ที่มี `criteria_completed`
@@ -71,8 +73,8 @@ Event ก่อน login ส่งด้วย anonymous device ID ของ Pos
 
 | Guardrail | นิยาม | เหตุผล |
 |---|---|---|
-| Auth completion rate | ผู้ใช้ที่มี `auth_completed` ÷ ผู้ใช้ที่มี `auth_screen_shown` แยกตาม platform และ method | D-011 วาง login ก่อนเห็นคุณค่า drop-off ตรงนี้ไม่ปรากฏใน TTY (R-007) |
-| Activation | ผู้ใช้ที่มี `criteria_completed` ครั้งแรก ÷ ผู้ใช้ที่มี `auth_screen_shown` | วัดผลรวมของ login ต่อการเริ่มใช้งานจริง |
+| Auth completion rate | ผู้ใช้ที่มี `auth_completed` ÷ ผู้ใช้ที่มี `auth_screen_shown` แยกตาม platform และ method | D-011 วาง login ไว้ก่อนการยืนยันครั้งแรก ผู้ที่เลิกตรงนี้จะกลายเป็น `session_abandoned` (R-007) |
+| First-decision conversion | ผู้ใช้ใหม่ที่มี `decision_confirmed` ÷ ผู้ใช้ใหม่ที่มี `shortlist_shown` | วัดผลรวมของ login gate ต่อการตัดสินใจครั้งแรก เทียบกับ completion rate ของผู้ใช้ที่ login แล้ว |
 | Time to Criteria | `criteria_completed.ts − session_start.ts` (median, P90) | D-001 ตัดช่วงนี้ออกจาก TTY จึงต้องดูแยก ไม่ให้เวลาย้ายไปซ่อนที่หน้าแรก |
 | End-to-end time | `decision_confirmed.ts − session_start.ts` | ตัวเลขที่ตรงกับคำสัญญา "30 วินาที" ในมุมผู้ใช้ |
 | Relevance | สัดส่วน 👍 ต่อ feedback ทั้งหมด, อัตรา reroll ต่อ session | ตัดสินใจเร็วแต่ไม่ถูกใจไม่ถือว่าสำเร็จ |

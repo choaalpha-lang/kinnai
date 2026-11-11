@@ -296,17 +296,18 @@ function vKampai(){
   if(K.step>0)h+='<button class="link" data-act="kreset" style="align-self:center">'+(K.step===5?L('สร้างนัดใหม่','New group'):L('ยกเลิกนัดนี้','Cancel this group'))+'</button>';
   return h}
 function vLogin(){
-  if(!S.authShown){S.authShown=1;ev('auth_screen_shown')}
-  var h='<div class="state" style="padding:44px 0 4px"><div class="big">🍜</div><h2>'+L('เลือกร้านได้ใน 30 วินาที','Pick a place in 30 seconds')+'</h2><p class="sub">'+L('เข้าสู่ระบบครั้งเดียว ความชอบและประวัติจะตามคุณไปทุกเครื่อง','Sign in once. Your preferences and history follow you to any device.')+'</p></div>';
+  var pr=S.pendingPick?by(R,+S.pendingPick):null;
+  var h='<div class="state" style="padding:36px 0 4px"><div class="big">'+(pr?cu(pr.c).e:'🍜')+'</div><h2>'+(pr?L('อีกขั้นเดียว ก็ได้ไป'+pr.th,'One step to '+pr.en):L('เข้าสู่ระบบ KinNai','Sign in to KinNai'))+'</h2><p class="sub">'+L('เข้าสู่ระบบครั้งเดียว เราจะจำร้านที่คุณเลือกและความชอบไว้ให้ทุกเครื่อง','Sign in once. We keep your picks and preferences on every device.')+'</p></div>';
   if(S.authStep){var n=PROV[S.authStep];
     h+='<div class="card"><span class="badge" style="align-self:flex-start">'+L('จำลองหน้ายืนยันของ '+n,'Simulated '+n+' prompt')+'</span><h3>'+L('ใช้บัญชี '+n+' กับ KinNai','Use your '+n+' account with KinNai')+'</h3><p class="sub">'+L('KinNai ได้รับเฉพาะรหัสบัญชีและชื่อที่แสดง ไม่ขออีเมลหรือเบอร์โทร','KinNai receives only an account ID and display name. No email or phone number.')+'</p><button class="btn" data-act="authok">'+(S.authStep==='apple'?L('ยืนยันด้วย Face ID','Confirm with Face ID'):L('ดำเนินการต่อ','Continue'))+'</button><button class="btn ghost" data-act="authno">'+L('ยกเลิก','Cancel')+'</button></div>';
   }else{
     if(S.authMsg)h+='<div class="notice coral">'+S.authMsg+'</div>';
     h+='<button class="btn dark" data-act="auth" data-v="apple"> '+L('ดำเนินการต่อด้วย Apple','Continue with Apple')+'</button><button class="btn ghost" data-act="auth" data-v="google">'+L('ดำเนินการต่อด้วย Google','Continue with Google')+'</button>';
-    h+='<p class="sub" style="text-align:center;font-size:12px">'+L('เมื่อเข้าสู่ระบบ ถือว่าคุณรับทราบประกาศความเป็นส่วนตัว การขอใช้ตำแหน่งจะถามแยกภายหลัง','By signing in you acknowledge the privacy notice. Location access is asked separately later.')+'</p>';
+    h+='<p class="sub" style="text-align:center;font-size:12px">'+L('เมื่อเข้าสู่ระบบ ถือว่าคุณรับทราบประกาศความเป็นส่วนตัว','By signing in you acknowledge the privacy notice.')+'</p><button class="link" data-act="authback" style="align-self:center">'+(pr?L('กลับไปดูร้าน','Back to the picks'):L('ไว้ทีหลัง','Not now'))+'</button>';
   }
   return h}
 function vAccounts(){
+  if(!P.auth)return '<div class="card"><h3>'+L('ยังไม่ได้เข้าสู่ระบบ','Not signed in')+'</h3><p class="sub">'+L('เข้าสู่ระบบเพื่อเก็บร้านที่เลือกและความชอบไว้ข้ามเครื่อง ระบบจะถามอีกครั้งตอนคุณกดยืนยันร้านแรก','Sign in to keep your picks and preferences across devices. You will be asked when you confirm your first place.')+'</p><button class="btn" data-act="signin">'+L('เข้าสู่ระบบ','Sign in')+'</button></div>';
   var ids=P.auth.ids,h='<div class="card"><h3>'+L('บัญชีที่เชื่อมไว้','Linked accounts')+'</h3><div>';
   ['apple','google'].forEach(function(k){var on=ids.indexOf(k)>=0;h+='<div class="member"><div class="av">'+PROV[k].charAt(0)+'</div><span>'+PROV[k]+'</span>'+(on?'<span class="badge green">'+L('เชื่อมแล้ว','Linked')+'</span>'+(ids.length>1?'<button class="link" data-act="unlink" data-v="'+k+'">'+L('ยกเลิก','Unlink')+'</button>':''):'<button class="btn small ghost" data-act="link" data-v="'+k+'">'+L('เชื่อมบัญชี','Link')+'</button>')+'</div>'});
   h+='</div>'+(ids.length===1?'<p class="sub">'+L('เชื่อมอีกช่องทางไว้ เผื่อเปลี่ยนเครื่องข้ามค่าย ต้องเหลืออย่างน้อย 1 ช่องทางเสมอ','Link the other one in case you switch platforms. At least one must stay linked.')+'</p>':'')+'<button class="link" data-act="signout" style="align-self:flex-start">'+L('ออกจากระบบ','Sign out')+'</button></div>';
@@ -319,20 +320,20 @@ function vMe(){
   h+='<div class="card"><div class="row split"><h3>KinNai Plus</h3><span class="badge">'+L('ยังไม่เปิดใน MVP1','Not in MVP1')+'</span></div><p class="sub">'+L('ราคาที่เสนอ ฿99 ต่อเดือน ยังไม่มีการเก็บเงินในต้นแบบนี้','Proposed ฿99 per month. No payment exists in this prototype.')+'</p></div>';
   return h}
 function renderApp(){
-  var body=!P.auth?vLogin():S.tab==='kampai'?vKampai():S.tab==='me'?vMe():S.screen==='loading'?vLoading():S.screen==='error'?vError():S.screen==='results'?vResults():S.screen==='done'?vDone():vHome();
+  var body=S.authGate?vLogin():S.tab==='kampai'?vKampai():S.tab==='me'?vMe():S.screen==='loading'?vLoading():S.screen==='error'?vError():S.screen==='results'?vResults():S.screen==='done'?vDone():vHome();
   var tabs=[['solo','🍜',L('กินไหน','Eat')],['kampai','🥂','Kampai'],['me','👤',L('ฉัน','Me')]];
-  var el=document.getElementById('phone'),sc=el.querySelector('.screen'),top=sc?sc.scrollTop:0,key=S.tab+S.screen+K.step;
-  el.innerHTML='<div class="appbar"><span class="logo">KinNai</span><div class="lang" role="group" aria-label="Language"><button data-act="lang" data-v="th" aria-pressed="'+(P.lang==='th')+'">ไทย</button><button data-act="lang" data-v="en" aria-pressed="'+(P.lang==='en')+'">EN</button></div></div><div class="screen">'+body+'</div>'+(!P.auth?'':'<nav class="tabbar">'+tabs.map(function(t){return '<button data-act="tab" data-v="'+t[0]+'"'+(S.tab===t[0]?' aria-current="page"':'')+'><i>'+t[1]+'</i>'+t[2]+'</button>'}).join('')+'</nav>');
+  var el=document.getElementById('phone'),sc=el.querySelector('.screen'),top=sc?sc.scrollTop:0,key=S.tab+S.screen+K.step+(S.authGate?'g':'');
+  el.innerHTML='<div class="appbar"><span class="logo">KinNai</span><div class="lang" role="group" aria-label="Language"><button data-act="lang" data-v="th" aria-pressed="'+(P.lang==='th')+'">ไทย</button><button data-act="lang" data-v="en" aria-pressed="'+(P.lang==='en')+'">EN</button></div></div><div class="screen">'+body+'</div>'+(S.authGate?'':'<nav class="tabbar">'+tabs.map(function(t){return '<button data-act="tab" data-v="'+t[0]+'"'+(S.tab===t[0]?' aria-current="page"':'')+'><i>'+t[1]+'</i>'+t[2]+'</button>'}).join('')+'</nav>');
   if(el.dataset.key===key)el.querySelector('.screen').scrollTop=top;el.dataset.key=key}
 
 /* ---------- render: console ---------- */
 function seg(act,items,cur){return '<div class="chips">'+items.map(function(it){return '<button class="chip" data-act="'+act+'" data-v="'+it[0]+'" aria-pressed="'+(cur===it[0])+'">'+it[1]+'</button>'}).join('')+'</div>'}
 function renderConsole(){
-  var h='<section class="panel"><h3>Time to Yes</h3><div class="meters"><div class="meter"><small>Solo · เป้า ≤ 30 วินาที</small><div class="num" id="soloT">0.0 วิ</div><div class="bar green"><b id="soloB" style="width:0"></b></div></div><div class="meter"><small>Kampai · เป้า ≤ 5 นาที</small><div class="num" id="grpT">0:00</div><div class="bar green"><b id="grpB" style="width:0"></b></div></div></div><p class="hint">Solo เริ่มจับเวลาเมื่อกำหนดเงื่อนไขเสร็จ (กด "ช่วยเลือกให้หน่อย" ครั้งแรกของมื้อ) และหยุดเมื่อกด "กินร้านนี้" การแก้เงื่อนไขหรือขอชุดใหม่ไม่รีเซ็ตเวลา เวลาที่ได้จากข้อมูลจำลองไม่ใช่หลักฐานยืนยันเป้า 30 วินาที</p></section>';
+  var h='<section class="panel"><h3>Time to Yes</h3><div class="meters"><div class="meter"><small>Solo · เป้า ≤ 30 วินาที</small><div class="num" id="soloT">0.0 วิ</div><div class="bar green"><b id="soloB" style="width:0"></b></div></div><div class="meter"><small>Kampai · เป้า ≤ 5 นาที</small><div class="num" id="grpT">0:00</div><div class="bar green"><b id="grpB" style="width:0"></b></div></div></div><p class="hint">Solo เริ่มจับเวลาเมื่อกำหนดเงื่อนไขเสร็จ (กด "ช่วยเลือกให้หน่อย" ครั้งแรกของมื้อ) และหยุดเมื่อกด "กินร้านนี้" การแก้เงื่อนไขหรือขอชุดใหม่ไม่รีเซ็ตเวลา ครั้งแรกเวลาจะรวมขั้นตอน login ด้วย เวลาที่ได้จากข้อมูลจำลองไม่ใช่หลักฐานยืนยันเป้า 30 วินาที</p></section>';
   h+='<section class="panel"><h3>จำลองสถานการณ์</h3><p class="hint">มีผลกับการค้นหาครั้งถัดไปในแท็บ กินไหน</p><span class="label">ผลการค้นหา</span>'+seg('scn',[['normal','ปกติ'],['slow','เน็ตช้า'],['few','เจอร้านเดียว'],['none','ไม่เจอร้าน'],['error','ระบบค้นหาล่ม']],S.scenario)+'<span class="label">สิทธิ์ตำแหน่ง</span>'+seg('loc',[['granted','อนุญาต'],['denied','ผู้ใช้ปฏิเสธ']],S.loc)+'</section>';
   h+='<section class="panel"><h3>Requirement ที่ลองแล้วในรอบนี้</h3><ul class="cov">'+REQ.map(function(r){return '<li class="'+(cov[r[0]]?'done':'')+'"><span class="dot"></span><code>'+r[0]+'</code><span class="t">'+r[1]+'</span></li>'}).join('')+'</ul></section>';
   h+='<section class="panel"><h3>Analytics events (จำลอง)</h3><div class="log">'+(log.length?log.map(function(e){return '<span class="d">+'+e.t+'s</span> <span class="n">'+e.n+'</span> <span class="d">'+esc(e.p)+'</span>'}).join('\n'):'<span class="d">ยังไม่มี event เริ่มใช้แอปด้านซ้ายเพื่อดู event ที่จะส่งเข้า PostHog</span>')+'</div></section>';
-  h+='<div class="two"><section class="panel"><h3>Founder ตัดสินแล้ว</h3><ul class="plain"><li>Solo TTY เริ่มเมื่อกำหนดเงื่อนไขเสร็จ</li><li>งบเป็นเพดาน ร้านที่ถูกกว่าก็แสดง</li><li>Kampai เสมอ: ผู้ตั้งนัดเป็นคนเลือก</li><li>คนไม่ตอบนับเป็นงดออกเสียง</li><li>Consent และ retention ทำตาม PDPA</li><li>บังคับ login ตอนเปิดแอป ด้วย Apple หรือ Google</li></ul></section><section class="panel"><h3>ยังเปิดอยู่</h3><ul class="plain"><li>ผู้ให้บริการ Places และเงื่อนไข license ในการแสดงผลและ cache</li><li>ระยะเวลาเก็บประวัติที่จะประกาศใน privacy notice</li><li>นโยบายอายุผู้ใช้ขั้นต่ำ</li><li>ความเสี่ยง App Store review จากการบังคับ login</li></ul></section><section class="panel"><h3>ไม่อยู่ในต้นแบบนี้</h3><ul class="plain"><li>ข้อมูลร้านจริง GPS จริง และ backend</li><li>การ login จริงกับ Apple และ Google (หน้ายืนยันเป็นการจำลอง)</li><li>LINE Login (เลื่อนไปหลัง MVP1)</li><li>การชำระเงิน Plus และ Kampai Premium</li><li>Referral, affiliate, Merchant Pro</li><li>การแนะนำด้วย LLM</li></ul></section></div>';
+  h+='<div class="two"><section class="panel"><h3>Founder ตัดสินแล้ว</h3><ul class="plain"><li>Solo TTY เริ่มเมื่อกำหนดเงื่อนไขเสร็จ</li><li>งบเป็นเพดาน ร้านที่ถูกกว่าก็แสดง</li><li>Kampai เสมอ: ผู้ตั้งนัดเป็นคนเลือก</li><li>คนไม่ตอบนับเป็นงดออกเสียง</li><li>Consent และ retention ทำตาม PDPA</li><li>Login ด้วย Apple หรือ Google ตอนกดยืนยันร้านครั้งแรก</li></ul></section><section class="panel"><h3>ยังเปิดอยู่</h3><ul class="plain"><li>ผู้ให้บริการ Places และเงื่อนไข license ในการแสดงผลและ cache</li><li>ระยะเวลาเก็บประวัติที่จะประกาศใน privacy notice</li><li>นโยบายอายุผู้ใช้ขั้นต่ำ</li><li>จะขออีเมลจาก Apple/Google หรือไม่</li></ul></section><section class="panel"><h3>ไม่อยู่ในต้นแบบนี้</h3><ul class="plain"><li>ข้อมูลร้านจริง GPS จริง และ backend</li><li>การ login จริงกับ Apple และ Google (หน้ายืนยันเป็นการจำลอง)</li><li>LINE Login (เลื่อนไปหลัง MVP1)</li><li>การชำระเงิน Plus และ Kampai Premium</li><li>Referral, affiliate, Merchant Pro</li><li>การแนะนำด้วย LLM</li></ul></section></div>';
   document.getElementById('console').innerHTML=h;tick()}
 function tick(){
   var a=document.getElementById('soloT');if(!a)return;
@@ -357,23 +358,26 @@ var A={
   reroll:function(){search(true);return false},
   home:function(){S.screen='home'},
   relax:function(){var i=RAD.indexOf(P.rad);if(i<RAD.length-1)P.rad=RAD[i+1];else P.cui='any';if(S.scenario==='none'||S.scenario==='few')S.scenario='normal';save();ev('filters_relaxed',{radius_km:P.rad,cuisine:P.cui});S.seen=[];search(false);return false},
-  pick:function(v){if(S.decision){ev('decision_confirmed',{ignored:'duplicate',decision_id:S.decision.id});return}
+  pick:function(v){if(!P.auth){S.pendingPick=v;S.authGate=true;S.authStep=null;S.authMsg=null;ev('auth_screen_shown',{trigger:'confirm_decision'});return}
+    if(S.decision){ev('decision_confirmed',{ignored:'duplicate',decision_id:S.decision.id});return}
     var tty=Date.now()-S.tc;S.decision={id:'d'+S.sid,rid:+v,tty:tty};S.fb=null;S.fbr=null;S.screen='done';cov['SOLO-003']=1;
     P.hist.unshift({rid:+v,tty:tty});P.hist=P.hist.slice(0,10);save();
-    ev('decision_confirmed',{decision_id:'d'+S.sid,restaurant:+v,time_to_yes_ms:tty,within_target:tty<=30000})},
+    ev('decision_confirmed',{decision_id:'d'+S.sid,restaurant:+v,time_to_yes_ms:tty,within_target:tty<=30000,included_auth:!!S.viaAuth});S.viaAuth=false},
   dup:function(){ev('decision_confirmed',{ignored:'duplicate',decision_id:S.decision.id})},
   map:function(){cov['SOLO-004']=1;ev('map_opened',{decision_id:S.decision.id,provider:'google_maps'})},
   fb:function(v){var id=S.decision.rid;S.fb=v;S.fbr=null;cov['SOLO-005']=1;P.liked=P.liked.filter(function(x){return x!==id});P.disliked=P.disliked.filter(function(x){return x!==id});(v==='up'?P.liked:P.disliked).push(id);save();ev('feedback_submitted',{decision_id:S.decision.id,rating:v})},
   fbr:function(v){S.fbr=v;ev('feedback_reason',{decision_id:S.decision.id,reason:v})},
   'new':function(){abandon();S.t0=null;S.tc=null;S.decision=null;S.list=[];S.seen=[];S.screen='home';S.fb=null},
   del1:function(){S.confirmDel=true},del0:function(){S.confirmDel=false},
-  del2:function(){try{localStorage.removeItem(KEY)}catch(e){}var lang=P.lang;P={lang:lang,bud:'b2',cui:'any',rad:2,liked:[],disliked:[],hist:[]};S.confirmDel=false;S.tab='solo';S.screen='home';S.authShown=0;ev('account_deleted',{scope:'account,preferences,history'})},
+  del2:function(){try{localStorage.removeItem(KEY)}catch(e){}var lang=P.lang;P={lang:lang,bud:'b2',cui:'any',rad:2,liked:[],disliked:[],hist:[]};S.confirmDel=false;ev('account_deleted',{scope:'account,preferences,history'})},
   auth:function(v){S.authStep=v;S.authMsg=null;ev('auth_method_selected',{method:v})},
-  authok:function(){var m=S.authStep;P.auth={ids:[m]};S.authStep=null;cov['AUTH-001']=1;save();ev('auth_completed',{method:m,taps:2})},
+  authok:function(){var m=S.authStep,v=S.pendingPick;P.auth={ids:[m]};S.authStep=null;S.authGate=false;S.pendingPick=null;cov['AUTH-001']=1;save();ev('auth_completed',{method:m,taps:2});if(v){S.viaAuth=true;A.pick(v)}},
+  authback:function(){ev('auth_dismissed',{had_pending_decision:!!S.pendingPick});S.authGate=false;S.pendingPick=null;S.authStep=null;S.authMsg=null},
+  signin:function(){S.authGate=true;S.authStep=null;S.authMsg=null;ev('auth_screen_shown',{trigger:'me_tab'})},
   authno:function(){ev('auth_cancelled',{method:S.authStep});S.authMsg=L('ยังไม่ได้เข้าสู่ระบบ ลองอีกครั้งหรือเลือกอีกช่องทาง','You are not signed in yet. Try again or use the other option.');S.authStep=null},
   link:function(v){P.auth.ids.push(v);save();ev('identity_linked',{method:v})},
   unlink:function(v){if(P.auth.ids.length<2)return;P.auth.ids=P.auth.ids.filter(function(x){return x!==v});save();ev('identity_unlinked',{method:v})},
-  signout:function(){P.auth=null;save();S.tab='solo';S.authShown=0;ev('signed_out')},
+  signout:function(){P.auth=null;save();ev('signed_out')},
   scn:function(v){S.scenario=v},
   loc:function(v){S.loc=v;if(v==='granted')S.area=null;ev('location_permission',{status:v})},
   kbud:function(v){K.bud=v},karea:function(v){K.area=v},

@@ -17,7 +17,7 @@
 | D-007 | ขอบเขต spec | เฉพาะ MVP1 เข้า detailed specification | Blueprint V1.2 | REQUIREMENTS |
 | D-008 | สิ่งที่ไม่ทำใน MVP1 | Production payments, referral, merchant portal, LLM recommendation | Blueprint V1.2 | PRD §3 |
 | D-009 | งบ MVP | เพดานวางแผน THB 45,000 (ทบทวนได้) | Blueprint V1.2 | GATE1 §5 |
-| D-011 | Login | บังคับ login ตอนเปิดแอป (ก่อนหน้าแรก) ด้วย Sign in with Apple และ Google เท่านั้น LINE Login เลื่อนไปหลัง MVP1 แทนที่ A-006 | Founder 2026-11-11 | AUTH-001, PLAT-002, PRIV-001 |
+| D-011 | Login | บังคับ login ด้วย Sign in with Apple และ Google เท่านั้น **ตอนกด "กินร้านนี้" ครั้งแรก** (แบบ ค2: เห็นผลแนะนำก่อน) ผู้ใช้เลือกเงื่อนไขและดูร้านได้โดยไม่ต้อง login LINE Login เลื่อนไปหลัง MVP1 แทนที่ A-006 | Founder 2026-11-11 (แก้จาก ค1 เป็น ค2 ในวันเดียวกัน) | AUTH-001, PLAT-002, PRIV-001 |
 | D-012 | Link account | หนึ่งบัญชี KinNai เชื่อมได้ทั้ง Apple และ Google ต้องเหลืออย่างน้อย 1 ช่องทาง | Founder 2026-11-11 | AUTH-001 |
 | D-010 | Traceability | Requirement ID แยกจาก Linear issue ID ห้ามแต่ง Linear ID | Blueprint V1.2 | LINEAR_WORKFLOW |
 
@@ -67,6 +67,6 @@
 | R-002 | เงื่อนไข license ห้าม cache ทำให้ต้นทุนต่อคำขอสูง | สูง | เลือก provider จากเงื่อนไข cache, ตั้ง daily cap และ kill switch |
 | R-003 | ภาระ PDPA ของ data controller ตกที่ Founder คนเดียว | กลาง | Data minimization, anonymous auth, ไม่เก็บพิกัดดิบ |
 | R-004 | KPI TTY ดูดีกว่าประสบการณ์จริง | กลาง | A-001, A-002 และรายงานคู่กับ completion rate |
-| R-006 | Apple ปฏิเสธแอปเพราะบังคับ login ทั้งที่ฟังก์ชันหลักไม่จำเป็นต้องใช้บัญชี (Guideline 5.1.1(v)) | สูง | เตรียมเหตุผลว่าบัญชีจำเป็นต่อการ sync ความชอบและประวัติ, มีทางถอย: ย้าย login ไปหลังผลแนะนำ (ค2) โดยไม่ต้องแก้โครงสร้าง |
-| R-007 | Drop-off ที่หน้า login ไม่ปรากฏใน TTY และ completion rate | กลาง | Guardrail `auth_completion_rate` ใน ANALYTICS_PLAN §4 |
+| R-006 | Apple ตั้งคำถามเรื่องบังคับ login ก่อนยืนยันร้าน (Guideline 5.1.1(v)) | กลาง (ลดจากสูงหลังเปลี่ยนเป็น ค2) | ผู้ใช้ดูคำแนะนำได้โดยไม่ต้องมีบัญชี; เตรียมเหตุผลว่าบัญชีใช้บันทึกการตัดสินใจและ sync ความชอบ ผลจริง UNKNOWN จนกว่าจะส่ง review |
+| R-007 | Login ครั้งแรกอยู่ระหว่าง `criteria_completed` กับ `decision_confirmed` จึงทำให้ TTY ครั้งแรกยาวขึ้นและ completion rate ลดลง | กลาง | แยกรายงาน TTY ด้วย `included_auth` และดู `auth_completion_rate` ใน ANALYTICS_PLAN §2, §4 |
 | R-005 | ขอบเขตบาน (Kampai จริง, Plus) ก่อนพิสูจน์ Solo | กลาง | Stage gate, GRP-001 เป็น Could |

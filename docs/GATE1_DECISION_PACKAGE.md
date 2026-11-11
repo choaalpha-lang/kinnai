@@ -6,7 +6,7 @@
 ## 0. Update 2026-11-11 (หลังรอบทบทวนกับ Founder)
 
 - A-001 ถึง A-005 ยืนยันแล้ว เงื่อนไข C-2 ปิด
-- A-006 ถูกยกเลิก: Founder เลือกบังคับ login ตอนเปิดแอปด้วย Apple และ Google (D-011) และให้เชื่อมบัญชีได้ (D-012) เพิ่ม requirement AUTH-001 และ finding F-06
+- A-006 ถูกยกเลิก: Founder เลือกบังคับ login ด้วย Apple และ Google ตอนกดยืนยันร้านครั้งแรก (D-011 แบบ ค2 แก้จาก ค1 ในวันเดียวกัน) และให้เชื่อมบัญชีได้ (D-012) เพิ่ม requirement AUTH-001 และ finding F-06
 - Backlog เป็น 16 รายการ
 - ข้อเสนอยังเป็น CONDITIONAL GO เงื่อนไขที่เหลือ: C-1, C-3, C-4
 
@@ -83,13 +83,13 @@
 - **Effect:** เวลา Founder ถูกแบ่งจากการพิสูจน์ Solo
 - **Recommendation:** ถือว่า GRP-001 เสร็จแล้วด้วย HTML prototype ไม่ port เข้าแอปใน MVP1 (Q-008)
 
-### F-06 — บังคับ login ก่อนเห็นคุณค่า (สูง)
+### F-06 — Login gate ก่อนการยืนยันร้านครั้งแรก (กลาง)
 
-- **Condition:** D-011 วางหน้า login ก่อนหน้าแรก ผู้ใช้ต้องมีบัญชีก่อนเห็นร้านแม้แต่ร้านเดียว
+- **Condition:** D-011 (ค2) ให้ดูผลแนะนำได้โดยไม่มีบัญชี แต่ต้อง login ก่อนยืนยันร้านครั้งแรก ขั้นตอน login จึงอยู่ในช่วงที่ TTY จับเวลา
 - **Criteria:** App Store Review Guideline 5.1.1(v): แอปไม่ควรบังคับ login ถ้าฟังก์ชันหลักไม่จำเป็นต้องใช้บัญชี; blueprint: "few taps"; PDPA ม.22
 - **Cause:** Founder ต้องการให้ทุกการตัดสินใจผูกกับบัญชีตั้งแต่ MVP1
-- **Effect:** (1) เสี่ยงถูกปฏิเสธตอน review ผลจริง UNKNOWN (2) drop-off ที่หน้า login ขนาด UNKNOWN และไม่ปรากฏใน TTY (3) เก็บ identifier เพิ่ม
-- **Recommendation:** ออกแบบ login ให้จบใน 2 แตะ (AUTH-001), ขอ scope ต่ำสุด, วัด `auth_completion_rate` และ activation ตั้งแต่ beta วันแรก, เตรียมเหตุผลต่อ App Review ว่าบัญชีใช้ sync ความชอบและประวัติ และออกแบบให้ย้าย login ไปหลังผลแนะนำได้โดยไม่แก้โครงสร้างถ้าถูกปฏิเสธ
+- **Effect:** (1) TTY ของการตัดสินใจครั้งแรกยาวขึ้น อาจเกิน 30 วินาที (2) ผู้ที่เลิกที่หน้า login ถูกนับเป็น abandonment ขนาด UNKNOWN (3) ความเสี่ยง App Review ลดลงจาก ค1 แต่ผลจริงยัง UNKNOWN (4) เก็บ identifier เพิ่ม
+- **Recommendation:** ออกแบบ login ให้จบใน 2 แตะ (AUTH-001), ขอ scope ต่ำสุด, ยืนยันร้านที่ค้างไว้ให้อัตโนมัติหลัง login, รายงาน TTY แยกตาม `included_auth`, วัด `auth_completion_rate` และ first-decision conversion ตั้งแต่ beta วันแรก และเตรียมเหตุผลต่อ App Review ว่าบัญชีใช้บันทึกการตัดสินใจและ sync ความชอบ
 
 ## 5. หลักฐานที่ต้องมีก่อน Gate 2
 
