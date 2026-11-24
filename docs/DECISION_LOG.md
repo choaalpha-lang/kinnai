@@ -20,6 +20,8 @@
 | D-011 | Login | บังคับ login ด้วย Sign in with Apple และ Google เท่านั้น **ตอนกด "กินร้านนี้" ครั้งแรก** (แบบ ค2: เห็นผลแนะนำก่อน) ผู้ใช้เลือกเงื่อนไขและดูร้านได้โดยไม่ต้อง login LINE Login เลื่อนไปหลัง MVP1 แทนที่ A-006 | Founder 2026-11-11 (แก้จาก ค1 เป็น ค2 ในวันเดียวกัน) | AUTH-001, PLAT-002, PRIV-001 |
 | D-012 | Link account | หนึ่งบัญชี KinNai เชื่อมได้ทั้ง Apple และ Google ต้องเหลืออย่างน้อย 1 ช่องทาง | Founder 2026-11-11 | AUTH-001 |
 | D-013 | ช่องทางส่งมอบ MVP1 | MVP1 เป็น **web app แบบ mobile-first** (responsive, เพิ่มลงหน้าจอหลักแบบ PWA ได้) เพื่อทดสอบกับผู้ใช้จริงก่อน ยังไม่ทำแอปบน App Store / Google Play การทำ native app ตัดสินหลังมีผลทดสอบ web | Founder 2026-11-24 | PRD §6, PLAT-001, REL-001, SETUP_CHECKLIST |
+| D-014 | Login บนเว็บ | คง Sign in with Apple และ Google ทั้งคู่ เพื่อรองรับผู้ใช้ iOS และ Android (ปิด Q-010) ต้องมี Apple Developer Program (USD 99 ต่อปี) ตั้งแต่เริ่ม Build | Founder 2026-11-24 | AUTH-001, SETUP_CHECKLIST |
+| D-015 | ช่องทางแจกผู้ทดสอบ | แจกแบบ referral ในกลุ่มคนรู้จักก่อน ไม่ทำแคมเปญสาธารณะใน MVP1 (ปิด Q-012) ยังไม่ใช่ระบบ referral ในแอป (REF-001 อยู่ MVP2) | Founder 2026-11-24 | UXR-001, ANALYTICS_PLAN §6 |
 | D-010 | Traceability | Requirement ID แยกจาก Linear issue ID ห้ามแต่ง Linear ID | Blueprint V1.2 | LINEAR_WORKFLOW |
 
 ## 2. Assumptions
@@ -57,9 +59,10 @@
 | Q-005 | พื้นที่เปิดตัว (ย่านใดในกรุงเทพฯ) | Founder | Gate 2 | Open |
 | Q-006 | การเชื่อม Linear workspace | Founder | ก่อนสร้าง issue จริง | Open: session นี้ไม่มี Linear tool |
 | Q-007 | Default branch ของ repo | Founder | ก่อนเปิด PR | Open: repo ไม่มี `main` |
-| Q-010 | คง Sign in with Apple บนเว็บหรือไม่ (ต้องมี Apple Developer Program USD 99 ต่อปีอยู่ดี เพื่อสร้าง Services ID) หรือเริ่มด้วย Google อย่างเดียว | Founder | ก่อนตั้งค่า Auth | Open (D-011 ยังกำหนดให้มีทั้งสอง) |
+| ~~Q-010~~ | คง Sign in with Apple บนเว็บหรือไม่ | Founder | — | **ปิดแล้ว 2026-11-24:** คงทั้งสอง (D-014) |
 | Q-011 | เงื่อนไข hosting: แผนฟรีของ Vercel จำกัดการใช้เชิงพาณิชย์หรือไม่ เมื่อทดสอบกับผู้ใช้จริง ต้องใช้แผนเสียเงินหรือ host อื่นหรือไม่ | Claude Code ตรวจใน Gate 2 | Gate 2 | Open: ยังไม่ได้ตรวจเงื่อนไขปัจจุบัน |
-| Q-012 | จะแจกลิงก์ทดสอบผ่านช่องทางไหน (LINE, QR, โพสต์) และตั้งเป้าผู้ทดสอบกี่คน | Founder | ก่อน Gate 4 | Open |
+| ~~Q-012~~ | ช่องทางแจกลิงก์ทดสอบ | Founder | — | **ปิดแล้ว 2026-11-24:** referral ในกลุ่มคนรู้จัก (D-015) |
+| Q-013 | ผู้ทดสอบจะแชร์ลิงก์กันผ่านแอปอะไร (LINE, Messenger, อื่น ๆ) และตั้งเป้าผู้ทดสอบกี่คน | Founder | ก่อน Gate 4 | Open: ผลต่อ R-008 โดยตรง |
 | Q-009 | ต้องขออีเมลจาก Apple/Google หรือใช้เฉพาะ account ID | Founder | Gate 2 | Open (ข้อเสนอ: ไม่ขออีเมล) |
 | Q-008 | GRP-001 จะ port เข้าแอปจริงใน MVP1 หรือใช้ HTML prototype ที่มีแล้ว | Founder | Gate 2 | Open (ข้อเสนอ: ใช้ HTML ที่มีแล้ว) |
 
@@ -73,7 +76,7 @@
 | R-004 | KPI TTY ดูดีกว่าประสบการณ์จริง | กลาง | A-001, A-002 และรายงานคู่กับ completion rate |
 | R-006 | Apple ตั้งคำถามเรื่องบังคับ login ก่อนยืนยันร้าน (Guideline 5.1.1(v)) **ยังไม่เกิดจนกว่าจะส่ง native app (D-013)** | ไม่มีใน web MVP1 (เดิมกลาง) | ผู้ใช้ดูคำแนะนำได้โดยไม่ต้องมีบัญชี; เตรียมเหตุผลว่าบัญชีใช้บันทึกการตัดสินใจและ sync ความชอบ ผลจริง UNKNOWN จนกว่าจะส่ง review |
 | R-007 | Login ครั้งแรกอยู่ระหว่าง `criteria_completed` กับ `decision_confirmed` จึงทำให้ TTY ครั้งแรกยาวขึ้นและ completion rate ลดลง | กลาง | แยกรายงาน TTY ด้วย `included_auth` และดู `auth_completion_rate` ใน ANALYTICS_PLAN §2, §4 |
-| R-008 | Google ไม่อนุญาต OAuth ใน embedded webview (นโยบาย secure browsers) ผู้ที่เปิดลิงก์จาก in-app browser เช่น LINE อาจ login ไม่ได้ ผลจริงของแต่ละแอป UNKNOWN | สูง (ถ้าแจกลิงก์ผ่าน LINE) | ตรวจ in-app browser ที่หน้า login แล้วแสดงปุ่ม "เปิดใน Safari/Chrome" พร้อมคำอธิบาย ทดสอบบน LINE จริงก่อนแจก |
+| R-008 | Google ไม่อนุญาต OAuth ใน embedded webview (นโยบาย secure browsers) ผู้ที่เปิดลิงก์จาก in-app browser เช่น LINE อาจ login ไม่ได้ ผลจริงของแต่ละแอป UNKNOWN | สูง (แจกแบบ referral คนรู้จัก ผ่านแอปแชตที่ยังไม่ระบุ ถ้าเป็น LINE เสี่ยงสูง) | ตรวจ in-app browser ที่หน้า login แล้วแสดงปุ่ม "เปิดใน Safari/Chrome" พร้อมคำอธิบาย ทดสอบบน LINE จริงก่อนแจก |
 | R-009 | Web ไม่มี secure storage ระดับ native และ iOS Safari อาจล้างข้อมูลเว็บของเว็บที่ไม่ได้เปิดเป็นเวลานาน ทำให้ข้อมูลก่อน login หาย | ต่ำ | เก็บข้อมูลก่อน login เป็นแค่ความชอบชั่วคราว ข้อมูลสำคัญอยู่ใน Supabase หลัง login |
 | R-010 | เว็บเก็บ identifier ผ่าน cookie/localStorage ของ analytics ก่อนได้ consent (PDPA ม.19) | กลาง | ไม่เริ่ม PostHog จนกว่าจะยอมรับ หรือใช้โหมดที่ไม่เก็บ identifier ถาวร |
 | R-005 | ขอบเขตบาน (Kampai จริง, Plus) ก่อนพิสูจน์ Solo | กลาง | Stage gate, GRP-001 เป็น Could |

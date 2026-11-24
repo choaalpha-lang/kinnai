@@ -22,7 +22,7 @@
 | 13 | GRP-001 | Kampai prototype (HTML) | Low | Could | — | **ส่งมอบแล้ว** รอ Founder ยอมรับ | |
 | 14 | REL-001 | เปิด web beta: โดเมน production, hosting, privacy policy, หน้าลบบัญชี, consent banner | Medium | Must | #3–#12 | Gate 4 | |
 | 15 | OPS-001 | Runbook: kill switch, cost alert, แจ้งเหตุละเมิดข้อมูล | Medium | Must | PLAT-003, PRIV-001 | Gate 4 | |
-| 16 | UXR-001 | แผนทดสอบกับผู้ใช้จริง: กลุ่มเป้าหมาย, จำนวน, ช่องทางแจก (Q-012), สคริปต์, เกณฑ์ผ่านของ H-001 และ H-004 | Medium | Should | — | ก่อน Gate 4 | |
+| 16 | UXR-001 | แผนทดสอบกับผู้ใช้จริง: กลุ่มเป้าหมาย, จำนวน, แจกแบบ referral ในกลุ่มคนรู้จัก (D-015) ขนาดกลุ่มตาม Q-013, สคริปต์, เกณฑ์ผ่านของ H-001 และ H-004 | Medium | Should | — | ก่อน Gate 4 | |
 
 ## Critical path
 

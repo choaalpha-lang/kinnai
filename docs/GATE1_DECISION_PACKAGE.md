@@ -10,7 +10,7 @@
 - ความเสี่ยง R-006 และข้อกำหนด App Store ใน F-06 ยังไม่เกิด แต่ผลของ login gate ต่อ TTY และ drop-off (R-007) ยังอยู่
 - ความเสี่ยงใหม่: R-008 (OAuth ใน in-app browser ของ LINE) และ R-010 (consent ของ analytics บนเว็บ)
 - ค่าใช้จ่าย: Google Play (USD 25) เลื่อนออกไป Apple Developer (USD 99 ต่อปี) ยังต้องใช้ถ้าคง Sign in with Apple (Q-010) Hosting UNKNOWN (Q-011)
-- งานใหม่: UXR-001 แผนทดสอบกับผู้ใช้จริง · เงื่อนไขใหม่ **C-5:** ตัดสิน Q-010 ก่อนตั้งค่า Auth
+- งานใหม่: UXR-001 แผนทดสอบกับผู้ใช้จริง · เงื่อนไขใหม่ C-5 (ตัดสิน Q-010) **ปิดแล้ว:** คง Apple และ Google (D-014) และแจกแบบ referral กลุ่มคนรู้จัก (D-015) งานที่ตามมา: ตอบ Q-013 และทดสอบ login ใน in-app browser ก่อนแจกคนแรก
 
 ## 0. Update 2026-11-11 (หลังรอบทบทวนกับ Founder)
 

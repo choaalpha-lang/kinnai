@@ -41,7 +41,7 @@
 
 **Edge cases:** ไม่มีเครือข่ายตอน login (แจ้งและให้ลองใหม่) · ผู้ใช้ Apple เลือกซ่อนอีเมล (ต้องทำงานได้ปกติ) · ผู้ใช้ถอนสิทธิ์ KinNai จากหน้าตั้งค่าของ Apple/Google (session ถูกยกเลิกและกลับหน้า login) · refresh token หมดอายุ · Android ที่ไม่มีบัญชี Google ในเครื่อง
 
-**Security / privacy:** บนเว็บใช้ OAuth แบบ authorization code + PKCE ผ่าน Supabase Auth · Sign in with Apple บนเว็บต้องมี Services ID, key และการยืนยันโดเมน จึงต้องมี Apple Developer Program (Q-010) · ขอ scope ต่ำสุด ไม่ขออีเมลถ้าไม่จำเป็น (Q-009, PDPA ม.22) · session ใช้กลไกของ Supabase client ตั้ง cookie แบบ Secure/SameSite ถ้าใช้ server rendering · การรับทราบ privacy notice อยู่ในหน้า login แต่ consent ตำแหน่งและ analytics ขอแยก (ม.19) · ลบบัญชีได้ในหน้า "ฉัน" ตามสิทธิ PDPA (ม.33) และ revoke token ของ Apple · ข้อกำหนด App Store 4.8 และ 5.1.1(v) ใช้เมื่อขึ้น store (D-013)
+**Security / privacy:** บนเว็บใช้ OAuth แบบ authorization code + PKCE ผ่าน Supabase Auth · Sign in with Apple บนเว็บต้องมี Services ID, key และการยืนยันโดเมน จึงต้องมี Apple Developer Program (D-014) · ขอ scope ต่ำสุด ไม่ขออีเมลถ้าไม่จำเป็น (Q-009, PDPA ม.22) · session ใช้กลไกของ Supabase client ตั้ง cookie แบบ Secure/SameSite ถ้าใช้ server rendering · การรับทราบ privacy notice อยู่ในหน้า login แต่ consent ตำแหน่งและ analytics ขอแยก (ม.19) · ลบบัญชีได้ในหน้า "ฉัน" ตามสิทธิ PDPA (ม.33) และ revoke token ของ Apple · ข้อกำหนด App Store 4.8 และ 5.1.1(v) ใช้เมื่อขึ้น store (D-013)
 
 **ข้อจำกัดบนเว็บ:** ถ้าตรวจพบว่าเปิดจาก in-app browser (เช่น LINE) ให้แสดงข้อความและปุ่ม "เปิดใน Safari/Chrome" ก่อนให้กดช่องทาง login เพราะ Google ไม่อนุญาต OAuth ใน embedded webview (R-008) · Redirect URI ต้องเป็น HTTPS บนโดเมนจริง
 

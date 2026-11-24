@@ -7,14 +7,14 @@ MVP1 เป็น web app (D-013) จึงยังไม่ต้องสม�
 
 ## 0. ต้องตัดสินก่อน
 
-- [ ] **Sign in with Apple บนเว็บ:** คงไว้หรือเริ่มด้วย Google อย่างเดียว (Q-010)
+- [x] **Sign in with Apple บนเว็บ:** คงไว้ทั้ง Apple และ Google (D-014, 2026-11-24)
   - บนเว็บ Apple ไม่บังคับให้ต้องมี (ข้อ 4.8 ใช้กับ App Store)
-  - ถ้าคงไว้ ต้องมี Apple Developer Program (USD 99 ต่อปี) เพื่อสร้าง Services ID และ key
+  - ต้องมี Apple Developer Program (USD 99 ต่อปี) เพื่อสร้าง Services ID และ key
   - สัดส่วนผู้ใช้ iPhone ในกลุ่มเป้าหมาย: UNKNOWN
 - [ ] ลงทะเบียนบัญชีต่าง ๆ ในนาม **บุคคล** หรือ **นิติบุคคล (Yimio)** (มีผลกับใบเสร็จ ภาษี และชื่อที่แสดงในหน้า OAuth consent ของ Google)
 - [ ] Region ของ Supabase และ PostHog (Q-004 มีผลต่อการโอนข้อมูลข้ามประเทศ PDPA ม.28–29)
 - [ ] Places provider (Q-001 รอ SPIKE-001)
-- [ ] ช่องทางแจกลิงก์ทดสอบ (Q-012) เพราะ LINE in-app browser มีผลต่อ Google login (R-008)
+- [x] ช่องทางแจก: referral ในกลุ่มคนรู้จัก (D-015) ยังต้องตอบว่าแชร์กันผ่านแอปอะไรและเป้ากี่คน (Q-013) เพราะ LINE in-app browser มีผลต่อ Google login (R-008)
 
 ## 1. ทำได้เลย (ฟรี ไม่ผูกมัด ไม่ต้องรอ Gate)
 
@@ -41,14 +41,14 @@ MVP1 เป็น web app (D-013) จึงยังไม่ต้องสม�
 ### Backend
 - [ ] Supabase: สร้าง project `dev` และ `production` (เลือก region ก่อนสร้าง)
 - [ ] Supabase: ตรวจว่าแผนฟรีหยุด project ที่ไม่มีการใช้งานหรือไม่ ก่อนเลือกแผนของ production
-- [ ] Supabase: เปิด Auth provider Google (และ Apple ถ้า Q-010 ตัดสินให้คงไว้) และใส่ Redirect URL ของโดเมนจริง
+- [ ] Supabase: เปิด Auth provider Google และ Apple และใส่ Redirect URL ของโดเมนจริง
 
 ### Login
 - [ ] Google Cloud project
   - [ ] ตั้งค่า OAuth consent screen (ชื่อแอป โลโก้ โดเมน privacy policy)
   - [ ] สร้าง OAuth client ชนิด web
   - [ ] ตรวจสถานะ publishing ของ consent screen ว่าผู้ใช้ทั่วไปเข้าได้ ไม่ใช่เฉพาะ test users
-- [ ] Apple (เฉพาะถ้าคง Sign in with Apple)
+- [ ] Apple (Sign in with Apple)
   - [ ] สมัคร Apple Developer Program (USD 99 ต่อปี)
   - [ ] สร้าง App ID และ Services ID, เปิด "Sign in with Apple"
   - [ ] ยืนยันโดเมนและตั้ง Return URL
@@ -96,7 +96,7 @@ MVP1 เป็น web app (D-013) จึงยังไม่ต้องสม�
 
 | รายการ | จำนวน | สถานะ |
 |---|---|---|
-| Apple Developer Program | USD 99 ต่อปี | ทราบแล้ว ต้องจ่ายเฉพาะถ้าคง Sign in with Apple (Q-010) |
+| Apple Developer Program | USD 99 ต่อปี | ทราบแล้ว ต้องจ่ายแน่นอนเพราะคง Sign in with Apple (D-014) |
 | โดเมน | UNKNOWN | ขึ้นกับชื่อและนามสกุลโดเมน |
 | Vercel | UNKNOWN | แผนฟรีอาจไม่ครอบคลุมการใช้เชิงพาณิชย์ (Q-011) |
 | Supabase | เริ่มที่แผนฟรี | เพดานและราคาแผนถัดไป: UNKNOWN |
@@ -119,7 +119,7 @@ MVP1 เป็น web app (D-013) จึงยังไม่ต้องสม�
 | Vercel | | | | | |
 | Supabase | | | | | |
 | Google Cloud | | | | | |
-| Apple Developer (ถ้าคงไว้) | | | | | |
+| Apple Developer | | | | | |
 | PostHog | | | | | |
 | Sentry | | | | | |
 | Places provider | | | | | |

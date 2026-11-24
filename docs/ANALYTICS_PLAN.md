@@ -26,7 +26,7 @@ Property ร่วมทุก event: `user_id` (Supabase user UUID ไม่ใ
 
 | Event | เกิดเมื่อ | Properties |
 |---|---|---|
-| `session_start` | หน้าแรกแสดงและแอปอยู่ foreground | `location_status` (granted/denied/not_asked) |
+| `session_start` | หน้าแรกแสดงและแอปอยู่ foreground | `location_status` (granted/denied/not_asked), `ref_code` (ไม่บังคับ: รหัสกลุ่มต้นทางแบบกว้าง เช่น `friends-a` จากพารามิเตอร์ในลิงก์ ห้ามเป็นชื่อหรือ ID ของบุคคล) |
 | `location_permission` | ผู้ใช้ตอบคำขอสิทธิ์ | `status` |
 | `area_selected` | เลือกย่านเอง | `area` |
 | `preference_set` | เปลี่ยนงบ/แนว/ระยะ | ค่าที่เปลี่ยน |
@@ -94,3 +94,5 @@ Retention D1/D7/D30 จาก `decision_confirmed` · Paid conversion, ARPU, chu
 - Event ที่ส่งแบบ offline ใช้ `client_ts` เดิม
 - บัญชีทดสอบและ build ภายในติด `is_internal = true` และตัดออกจาก dashboard
 - ข้อมูลจากต้นแบบ HTML ไม่นำมารวมกับข้อมูล beta
+- ผู้ทดสอบกลุ่มแรกเป็นคนรู้จักและมาจาก referral (D-015) กลุ่มตัวอย่างเล็กและไม่เป็นตัวแทนของผู้ใช้ทั่วไป ตัวเลข median/P90 ของ Solo TTY ใช้ดูทิศทางและหาจุดติดขัด ไม่ใช้เป็นหลักฐานยืนยัน H-001 และผู้ทดสอบอาจให้ feedback ในทางบวกเกินจริง จึงควรดูพฤติกรรมจริง (completion, reroll, abandonment) ควบคู่กับ 👍/👎
+- ขนาดกลุ่มตัวอย่างและเกณฑ์ผ่านกำหนดใน UXR-001 (Q-013)
