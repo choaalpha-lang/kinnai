@@ -17,7 +17,7 @@ Solo diner ในกรุงเทพฯ (พนักงานออฟฟิ�
 
 **In scope:** AUTH-001, SOLO-001 ถึง 005, GRP-001 (ต้นแบบ), PLAT-001 ถึง 003, PRIV-001, ANL-001
 
-**Out of scope ใน MVP1 (D-008):** การชำระเงินและ subscription · Kampai ที่ใช้งานจริงหลายคน · referral · affiliate และ sponsored result · merchant portal · การแนะนำด้วย LLM · LINE Login, OTP, อีเมลและรหัสผ่าน (D-011) · รีวิวหรือรูปที่ผู้ใช้สร้าง
+**Out of scope ใน MVP1 (D-008, D-013):** แอปบน App Store และ Google Play · push notification · ใช้งานออฟไลน์เต็มรูปแบบ · การชำระเงินและ subscription · Kampai ที่ใช้งานจริงหลายคน · referral · affiliate และ sponsored result · merchant portal · การแนะนำด้วย LLM · LINE Login, OTP, อีเมลและรหัสผ่าน (D-011) · รีวิวหรือรูปที่ผู้ใช้สร้าง
 
 ## 4. User flow หลัก
 
@@ -42,9 +42,10 @@ Solo diner ในกรุงเทพฯ (พนักงานออฟฟิ�
 
 Managed modular monolith ตาม D-006
 
-- **Mobile:** Expo + React Native + TypeScript · โมดูล `decision`, `preferences`, `feedback`, `analytics`
+- **Web app (D-013):** Next.js (React) + TypeScript บน Vercel · mobile-first responsive · เพิ่มลงหน้าจอหลักแบบ PWA ได้ (manifest) · โมดูล `decision`, `preferences`, `feedback`, `analytics` · เสนอไว้ให้ยืนยันใน Gate 2 (ทางเลือก: Vite SPA ง่ายกว่า แต่ไม่มี server rendering)
+- **ทางไป native ภายหลัง:** Supabase และ logic ที่เป็น TypeScript นำกลับมาใช้ได้ ส่วน UI ต้องสร้างใหม่ (เช่น Expo) หรือห่อด้วย Capacitor ตัดสินหลังมีผลทดสอบ web ยังไม่ประเมิน
 - **Backend:** Supabase Postgres + Auth (Sign in with Apple, Google) + RLS · Edge Function `search-places` (ห่อ provider, rate limit, cost cap) และ `confirm-decision` (idempotent)
-- **ภายนอก:** Places provider (Q-001) · แอปแผนที่ของเครื่อง · PostHog · Sentry
+- **ภายนอก:** Places provider (Q-001) · ลิงก์ Google Maps (เปิดแอปแผนที่ถ้ามี) · PostHog · Sentry (browser SDK)
 - ไม่มี AI call ใน MVP1
 
 รายละเอียด schema, dependency และต้นทุนเป็นงานของ Gate 2
@@ -69,6 +70,7 @@ Managed modular monolith ตาม D-006
 ## 8. Release criteria ของ MVP1
 
 - Must ทุกข้อผ่าน Definition of Done
+- ทดสอบบน iOS Safari และ Chrome Android จริง รวม in-app browser ของ LINE (R-008)
 - Privacy notice และ consent ผ่านการทบทวนทางกฎหมาย
 - Cost cap และ kill switch ทดสอบแล้ว
 - Dashboard ตาม ANALYTICS_PLAN ใช้งานได้ก่อนเปิด beta

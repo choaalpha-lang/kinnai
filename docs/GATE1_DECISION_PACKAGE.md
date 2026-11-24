@@ -3,6 +3,15 @@
 วันที่: 2026-11-11 · จัดทำโดย: Claude Code (Discover + Specify) · ผู้อนุมัติ: Founder
 ขอบเขตงานที่ทำ: เอกสารและต้นแบบ HTML เท่านั้น ไม่มีการติดตั้ง dependency, สร้าง app code, เชื่อม credential, สร้าง Linear issue หรือ deploy
 
+## 0a. Update 2026-11-24 (MVP1 เป็น web app)
+
+- D-013: MVP1 ส่งมอบเป็น web app แบบ mobile-first เพื่อทดสอบกับผู้ใช้จริง ไม่มีแอปบน App Store / Google Play จนกว่าจะมีผลทดสอบ
+- Stack เปลี่ยนจาก Expo + React Native เป็น Next.js + TypeScript บน Vercel ส่วน Supabase, PostHog, Sentry คงเดิม
+- ความเสี่ยง R-006 และข้อกำหนด App Store ใน F-06 ยังไม่เกิด แต่ผลของ login gate ต่อ TTY และ drop-off (R-007) ยังอยู่
+- ความเสี่ยงใหม่: R-008 (OAuth ใน in-app browser ของ LINE) และ R-010 (consent ของ analytics บนเว็บ)
+- ค่าใช้จ่าย: Google Play (USD 25) เลื่อนออกไป Apple Developer (USD 99 ต่อปี) ยังต้องใช้ถ้าคง Sign in with Apple (Q-010) Hosting UNKNOWN (Q-011)
+- งานใหม่: UXR-001 แผนทดสอบกับผู้ใช้จริง · เงื่อนไขใหม่ **C-5:** ตัดสิน Q-010 ก่อนตั้งค่า Auth
+
 ## 0. Update 2026-11-11 (หลังรอบทบทวนกับ Founder)
 
 - A-001 ถึง A-005 ยืนยันแล้ว เงื่อนไข C-2 ปิด

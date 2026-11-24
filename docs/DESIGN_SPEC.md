@@ -58,15 +58,26 @@ Tab bar 3 แท็บ: กินไหน · Kampai · ฉัน
 
 ## 6. Accessibility
 
-Touch target ≥ 44×44pt · รองรับ Dynamic Type ถึง 130% โดยไม่ตัดข้อความ · chip ที่เลือกแยกได้ด้วยรูปทรงและสี · เคารพ reduce motion (ปิด shimmer) · accessibility label ครบสองภาษา
+Touch target ≥ 44×44 CSS px · ขยายตัวอักษรของเบราว์เซอร์ถึง 200% โดยไม่ตัดข้อความ · chip ที่เลือกแยกได้ด้วยรูปทรงและสี · เคารพ reduce motion (ปิด shimmer) · accessibility label ครบสองภาษา
 
 ## 7. ความต่างระหว่างต้นแบบกับแอปจริง
 
 | ต้นแบบ | แอปจริง |
 |---|---|
 | ร้านสมมติ 15 ร้าน ระยะคงที่ | ข้อมูลจาก Places provider |
-| หน้ายืนยัน Apple/Google เป็นการ์ดจำลอง | Native sign-in sheet ของระบบปฏิบัติการ ปุ่มต้องทำตาม brand guideline ของ Apple และ Google |
-| ตำแหน่งจำลองด้วยปุ่ม | สิทธิ์ตำแหน่งของระบบปฏิบัติการ + หน้าอธิบายก่อนขอ |
+| หน้ายืนยัน Apple/Google เป็นการ์ดจำลอง | หน้า OAuth ของ Apple/Google (redirect) และตรวจ in-app browser ก่อน ปุ่มต้องทำตาม brand guideline ของ Apple และ Google |
+| ตำแหน่งจำลองด้วยปุ่ม | Geolocation API ของเบราว์เซอร์ + คำอธิบายก่อนขอ |
 | เก็บใน localStorage | Supabase ใต้ RLS |
 | แผนที่เปิดการค้นหาย่าน | เปิดปลายทางเป็นร้านจริง |
 | Emoji เป็น thumbnail | รูปจาก provider ถ้า license อนุญาต ไม่เช่นนั้นใช้ไอคอนประเภทอาหาร |
+
+## 8. ข้อกำหนดสำหรับ web mobile-first (D-013)
+
+- **Viewport หลัก:** 360–430px กว้าง บน desktop แสดงเป็นคอลัมน์กลางกว้างไม่เกิน 480px ไม่ทำ layout หลายคอลัมน์ใน MVP1
+- **ความสูงหน้าจอ:** ใช้หน่วย `dvh` ไม่ใช้ `100vh` เพราะแถบ address bar ของ mobile browser ย่อ/ขยายได้ และเว้น safe-area ด้านล่างให้ bottom navigation
+- **Bottom navigation:** ตรึงล่าง 3 รายการ ซ่อนบนหน้า login เหมือนต้นแบบ
+- **PWA:** manifest, ไอคอน, theme color (cream/coral) เพื่อให้เพิ่มลงหน้าจอหลักได้ ไม่ต้องมีข้อความชวนติดตั้งใน MVP1
+- **Location prompt:** ขอเมื่อผู้ใช้กดปุ่มเท่านั้น พร้อมคำอธิบายก่อน เพราะ browser ถามครั้งเดียวและผู้ใช้ปฏิเสธแล้วแก้ยาก ต้องมีข้อความบอกวิธีเปิดสิทธิ์ใหม่
+- **In-app browser:** หน้า login ตรวจ user agent ของ LINE และแอปอื่น แล้วแสดงปุ่ม "เปิดใน Safari/Chrome" (R-008)
+- **ปุ่ม Apple / Google:** ทำตาม brand guideline ของแต่ละราย
+- **ต้นแบบ HTML ปัจจุบัน** สร้างด้วย HTML/CSS/JS ธรรมดา ใช้เป็นแบบอ้างอิงของ layout, copy และสถานะต่าง ๆ ได้ แต่ไม่ใช่โค้ดที่ควรนำไปต่อยอด

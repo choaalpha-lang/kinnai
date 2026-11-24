@@ -8,7 +8,7 @@
 |---|---|---|---|---|---|---|---|
 | 1 | SPIKE-001 | ประเมิน Places provider: ความครอบคลุม ข้อมูลราคา license ต้นทุน | Urgent | Must | — | ก่อน Gate 2 | |
 | 2 | SPIKE-002 | ทบทวน PDPA: notice, ฐานทางกฎหมาย, retention, ผู้เยาว์, โอนข้ามประเทศ | High | Must | — | ก่อน Gate 4 | |
-| 3 | PLAT-001 | App shell: Expo + TS, 3 แท็บ, i18n, tokens, CI, Sentry | High | Must | Gate 2 | Build | |
+| 3 | PLAT-001 | Web app shell: Next.js + TS, mobile-first, PWA manifest, bottom nav, i18n, tokens, CI + e2e smoke, Sentry | High | Must | Gate 2 | Build | |
 | 4 | PLAT-002 | Supabase schema, Auth providers (Apple, Google), RLS + RLS tests | High | Must | PLAT-001 | Build | |
 | 4a | AUTH-001 | หน้า login Apple/Google ตอนยืนยันร้านครั้งแรก, ย้ายข้อมูลในเครื่องเข้าบัญชี, เชื่อมบัญชี, ออกจากระบบ, ลบบัญชี + ตั้งค่า credentials ของ Apple Developer และ Google Cloud | High | Must | PLAT-001, PLAT-002 | Build | |
 | 5 | ANL-001 | Event instrumentation, schema test, dashboard | High | Must | PLAT-001 | Build | |
@@ -20,8 +20,9 @@
 | 11 | SOLO-004 | เปิดแผนที่ภายนอก | Medium | Must | SOLO-003 | Build | |
 | 12 | SOLO-005 | Feedback, ความชอบ, แท็บ "ฉัน" | Medium | Should | SOLO-003 | Build | |
 | 13 | GRP-001 | Kampai prototype (HTML) | Low | Could | — | **ส่งมอบแล้ว** รอ Founder ยอมรับ | |
-| 14 | REL-001 | เตรียม beta: TestFlight, Play internal testing, store privacy disclosure | Medium | Must | #3–#12 | Gate 4 | |
+| 14 | REL-001 | เปิด web beta: โดเมน production, hosting, privacy policy, หน้าลบบัญชี, consent banner | Medium | Must | #3–#12 | Gate 4 | |
 | 15 | OPS-001 | Runbook: kill switch, cost alert, แจ้งเหตุละเมิดข้อมูล | Medium | Must | PLAT-003, PRIV-001 | Gate 4 | |
+| 16 | UXR-001 | แผนทดสอบกับผู้ใช้จริง: กลุ่มเป้าหมาย, จำนวน, ช่องทางแจก (Q-012), สคริปต์, เกณฑ์ผ่านของ H-001 และ H-004 | Medium | Should | — | ก่อน Gate 4 | |
 
 ## Critical path
 

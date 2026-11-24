@@ -4,7 +4,7 @@
 
 | ระยะ | ช่วง | ขอบเขต | Gate ที่ต้องผ่าน | สถานะ |
 |---|---|---|---|---|
-| MVP 1.0 Solo Decision | M0–3 | งบ/แนว/ระยะ · 3 ร้านแนะนำ · แผนที่และ decision event · Kampai clickable prototype | ทดลอง Time to Yes ≤ 30 วินาที | **อยู่ที่ Gate 1** |
+| MVP 1.0 Solo Decision (web app mobile-first, D-013) | M0–3 | งบ/แนว/ระยะ · 3 ร้านแนะนำ · แผนที่และ decision event · Kampai clickable prototype | ทดลอง Time to Yes ≤ 30 วินาที | **อยู่ที่ Gate 1** |
 | MVP 1.5 Group + Plus Beta | M4–6 | เชิญและความชอบของกลุ่ม · โหวตและสรุป · Plus entitlement beta | กลุ่มตัดสินใจ ≤ 5 นาที และมีผู้จ่ายเงินจริง | ยังไม่ spec |
 | MVP 2.0 Growth | M7–12 | Kampai Premium · referral 3 เพื่อน · personalization · ทดสอบ retention/conversion | มีหลักฐานการใช้ซ้ำและ contribution | ยังไม่ spec |
 | Growth 2.0 Monetization | M13–18 | Affiliate · sponsored result (ติดป้าย) · AI-assisted support | หลักฐาน breakeven รายเดือน | ยังไม่ spec |
@@ -17,14 +17,14 @@
 | Gate 1 | PRD, user stories, AC, scope | รออนุมัติ: ดู `GATE1_DECISION_PACKAGE.md` |
 | Gate 2 | สถาปัตยกรรม, dependency, ต้นทุน, test plan | ยังไม่เริ่ม |
 | Gate 3 | Feature coverage และหลักฐานการทดสอบที่รันจริง | ยังไม่เริ่ม |
-| Gate 4 | Beta, privacy, การส่ง store | ยังไม่เริ่ม |
+| Gate 4 | Web beta กับผู้ใช้จริง, privacy, ความพร้อมด้านกฎหมาย (ยังไม่ส่ง store ตาม D-013) | ยังไม่เริ่ม |
 
 ## ลำดับงานของ MVP1
 
 1. **Gate 1 → 2:** SPIKE-001 (Places provider), SPIKE-002 (PDPA), แผนสถาปัตยกรรมและต้นทุน
 2. **Build:** PLAT-001/002, ANL-001 → PLAT-003, PRIV-001 → SOLO-001 ถึง 005
 3. **Gate 3:** หลักฐาน test ครบทุก AC
-4. **Gate 4:** Beta ในพื้นที่เปิดตัว เก็บข้อมูล TTY จริง
+4. **Gate 4:** Web beta ในพื้นที่เปิดตัว เก็บข้อมูล TTY จริง แล้วตัดสินว่าจะทำ native app (App Store / Google Play) หรือไม่ โดยใช้ผลทดสอบนี้
 
 ไม่มีการกำหนดวันที่รายสัปดาห์ในขั้นนี้ เพราะขึ้นกับผล SPIKE-001 และเวลาของ Founder (H-005)
 

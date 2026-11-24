@@ -7,7 +7,7 @@
 |---|---|---|
 | Customer Segments | Solo diners (พนักงานออฟฟิศ นักศึกษา) · Group organizers · Group participants | สมมติฐาน ยังไม่มี user research ใน repo |
 | Value Proposition | Solo: ได้ร้านใน 30 วินาที · Group: สรุปใน 5 นาที · คำนึงถึงงบ สถานที่ ความชอบ | H-001, H-002, H-004 |
-| Channels | App Store / Google Play · LINE share + referral · content และ word of mouth | ยังไม่ทดสอบ |
+| Channels | MVP1: เว็บ (ลิงก์, QR, LINE share) · หลังผล web beta: App Store / Google Play · referral · content และ word of mouth | ยังไม่ทดสอบ |
 | Customer Relationships | Self-service · คำแนะนำเฉพาะบุคคล · automated support | — |
 | Revenue Streams | Plus ฿99/เดือน (เสนอ) · Kampai Premium ฿39/ครั้ง (เสนอ) · ภายหลัง: affiliate, sponsorship, Merchant Pro | H-003 ไม่มีรายได้ใน MVP1 |
 | Key Resources | แอป, ตรรกะแนะนำ, ข้อมูลและ analytics, Founder, AI tools, แบรนด์ | — |

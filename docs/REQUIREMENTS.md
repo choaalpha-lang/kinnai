@@ -13,7 +13,7 @@
 | SOLO-004 | เปิดแผนที่นำทางภายนอก | Must | SOLO-003 |
 | SOLO-005 | Feedback และการจำความชอบ | Should | SOLO-003, PLAT-002 |
 | GRP-001 | Kampai clickable prototype (ข้อมูลจำลอง) | Could | ไม่มี (ส่งมอบแล้วเป็น HTML) |
-| PLAT-001 | App shell, i18n, design tokens, CI | Must | Gate 2 |
+| PLAT-001 | Web app shell (mobile-first), i18n, design tokens, CI | Must | Gate 2 |
 | PLAT-002 | Supabase schema, Auth (Apple, Google), RLS | Must | PLAT-001 |
 | PLAT-003 | Places adapter ฝั่ง server, rate limit, cost cap | Must | SPIKE-001, PLAT-002 |
 | PRIV-001 | Consent ตำแหน่ง, privacy notice, ลบข้อมูล | Must | SPIKE-002, PLAT-002 |
@@ -41,7 +41,9 @@
 
 **Edge cases:** ไม่มีเครือข่ายตอน login (แจ้งและให้ลองใหม่) · ผู้ใช้ Apple เลือกซ่อนอีเมล (ต้องทำงานได้ปกติ) · ผู้ใช้ถอนสิทธิ์ KinNai จากหน้าตั้งค่าของ Apple/Google (session ถูกยกเลิกและกลับหน้า login) · refresh token หมดอายุ · Android ที่ไม่มีบัญชี Google ในเครื่อง
 
-**Security / privacy:** ใช้ native sign-in แล้วแลก ID token กับ Supabase Auth ตรวจ nonce · ขอ scope ต่ำสุด ไม่ขออีเมลถ้าไม่จำเป็น (Q-009, PDPA ม.22) · เก็บ session ใน secure storage ของเครื่อง · การรับทราบ privacy notice อยู่ในหน้า login แต่ consent ตำแหน่งและ analytics ขอแยก (ม.19) · มีการลบบัญชีในแอปตามข้อกำหนดของ App Store (5.1.1(v)) และ Google Play · ต้องมี Sign in with Apple เพราะมี Google login (Guideline 4.8)
+**Security / privacy:** บนเว็บใช้ OAuth แบบ authorization code + PKCE ผ่าน Supabase Auth · Sign in with Apple บนเว็บต้องมี Services ID, key และการยืนยันโดเมน จึงต้องมี Apple Developer Program (Q-010) · ขอ scope ต่ำสุด ไม่ขออีเมลถ้าไม่จำเป็น (Q-009, PDPA ม.22) · session ใช้กลไกของ Supabase client ตั้ง cookie แบบ Secure/SameSite ถ้าใช้ server rendering · การรับทราบ privacy notice อยู่ในหน้า login แต่ consent ตำแหน่งและ analytics ขอแยก (ม.19) · ลบบัญชีได้ในหน้า "ฉัน" ตามสิทธิ PDPA (ม.33) และ revoke token ของ Apple · ข้อกำหนด App Store 4.8 และ 5.1.1(v) ใช้เมื่อขึ้น store (D-013)
+
+**ข้อจำกัดบนเว็บ:** ถ้าตรวจพบว่าเปิดจาก in-app browser (เช่น LINE) ให้แสดงข้อความและปุ่ม "เปิดใน Safari/Chrome" ก่อนให้กดช่องทาง login เพราะ Google ไม่อนุญาต OAuth ใน embedded webview (R-008) · Redirect URI ต้องเป็น HTTPS บนโดเมนจริง
 
 **Analytics:** `auth_screen_shown`, `auth_method_selected`, `auth_completed` (method, is_new_user), `auth_cancelled`, `auth_failed` (reason), `identity_linked`, `identity_unlinked`, `signed_out`, `account_deleted`
 
@@ -49,7 +51,7 @@
 
 **ก่อน login:** ความชอบและ session เก็บในเครื่องเท่านั้น และย้ายเข้าบัญชีเมื่อ login สำเร็จ ไม่มีการเขียนข้อมูลผู้ใช้ลงฐานข้อมูลก่อนมีบัญชี
 
-**ความเสี่ยงที่รู้แล้ว:** R-006 (App Store review) และ R-007 (login ครั้งแรกทำให้ TTY ยาวขึ้น)
+**ความเสี่ยงที่รู้แล้ว:** R-007 (login ครั้งแรกทำให้ TTY ยาวขึ้น) และ R-008 (OAuth ใน in-app browser) R-006 (App Store review) ยังไม่เกิดจนกว่าจะทำ native
 
 ---
 
@@ -136,7 +138,7 @@
 2. Given เครื่องไม่มีแอปแผนที่ When กดปุ่ม Then เปิดแผนที่ในเบราว์เซอร์แทน
 3. Given เปิดแผนที่ไม่สำเร็จ When กดปุ่ม Then แสดงชื่อและที่อยู่ร้านให้คัดลอกได้
 
-**Edge cases:** ร้านไม่มีพิกัด (ใช้ชื่อ + ย่านค้นหาแทน) · iOS กับ Android ใช้ URL scheme ต่างกัน
+**Edge cases:** ร้านไม่มีพิกัด (ใช้ชื่อ + ย่านค้นหาแทน) · iOS กับ Android ใช้ URL scheme ต่างกัน (บนเว็บใช้ https URL แบบ universal ของ Google Maps ที่ระบบเปิดแอปแผนที่ให้ถ้ามี ไม่ใช้ custom scheme)
 
 **Security:** ส่งเฉพาะปลายทาง ไม่ส่ง user identifier ใน URL
 
@@ -185,9 +187,9 @@
 
 ---
 
-## PLAT-001 — App shell
+## PLAT-001 — Web app shell
 
-Expo + React Native + TypeScript (strict) · 3 แท็บ (กินไหน, Kampai, ฉัน) · i18n ไทย/อังกฤษ · design tokens จาก `DESIGN_SPEC.md` · CI: typecheck, lint, unit test ทุก PR · Sentry
+Next.js (React) + TypeScript (strict) บน Vercel (D-013) · mobile-first responsive ออกแบบที่ 360–430px และแสดงเป็นคอลัมน์กลางบน desktop · PWA manifest เพื่อเพิ่มลงหน้าจอหลัก (service worker ไม่บังคับใน MVP1) · bottom navigation 3 รายการ (กินไหน, Kampai, ฉัน) · i18n ไทย/อังกฤษ · design tokens จาก `DESIGN_SPEC.md` · CI: typecheck, lint, unit test และ e2e smoke บนเบราว์เซอร์ ทุก PR · Sentry browser SDK
 **AC:** Given PR ใหม่ When CI รัน Then typecheck, lint และ test ต้องผ่านจึง merge ได้ · Given แอป crash Then Sentry ได้รับรายงานโดยไม่มีข้อมูลส่วนบุคคลใน payload
 
 ## PLAT-002 — Supabase schema, auth, RLS
@@ -207,7 +209,7 @@ Edge Function เดียวที่ห่อ provider หลัง interface 
 2. Given ผู้ใช้เปิด privacy notice When อ่าน Then พบรายการตาม PDPA ม.23: วัตถุประสงค์, ข้อมูลที่เก็บ, ระยะเวลาเก็บ, ผู้รับข้อมูล, ช่องทางติดต่อ controller, สิทธิของเจ้าของข้อมูล
 3. Given ผู้ใช้กด "ลบบัญชีและข้อมูล" และยืนยัน When สำเร็จ Then บัญชีใน Supabase Auth และข้อมูลใน `preferences`, `decisions`, `feedback`, `decision_sessions` ของผู้ใช้ถูกลบ และ PostHog person ถูกลบ (ม.33)
 4. Given ผู้ใช้ให้หรือถอน consent When เกิดขึ้น Then บันทึกใน `consent_log` พร้อมเวลาและเวอร์ชันของ notice (ม.19)
-5. Given analytics When ผู้ใช้ยังไม่ยอมรับ Then ไม่ส่ง event ที่ไม่จำเป็นต่อการให้บริการ
+5. Given analytics When ผู้ใช้ยังไม่ยอมรับ Then ไม่ส่ง event ที่ไม่จำเป็นต่อการให้บริการ และบนเว็บไม่ตั้ง cookie หรือ localStorage ของ PostHog จนกว่าจะยอมรับ (R-010)
 
 ข้อความ notice และฐานทางกฎหมายต้องผ่าน SPIKE-002 ก่อน Gate 4
 
@@ -221,14 +223,15 @@ Edge Function เดียวที่ห่อ provider หลัง interface 
 
 | ID | หมวด | ข้อกำหนด |
 |---|---|---|
-| NFR-01 | Performance | ผลแนะนำแสดงภายใน 2 วินาทีที่ P75 บน 4G · cold start ≤ 3 วินาทีบนเครื่องระดับกลาง |
-| NFR-02 | Reliability | Crash-free sessions ≥ 99% ใน beta |
-| NFR-03 | Accessibility | Contrast ตาม WCAG 2.1 AA สำหรับข้อความ · รองรับ Dynamic Type · เคารพ reduce motion · ปุ่มมี accessibility label ทั้งสองภาษา |
+| NFR-01 | Performance | ผลแนะนำแสดงภายใน 2 วินาทีที่ P75 บน 4G · LCP ≤ 2.5 วินาทีที่ P75 บน 4G ตามเกณฑ์ Core Web Vitals · งบขนาด JS ของหน้าแรกกำหนดใน Gate 2 |
+| NFR-02 | Reliability | Sessions ที่ไม่มี JavaScript error ที่ไม่ได้จัดการ ≥ 99% ใน beta (วัดจาก Sentry) |
+| NFR-03 | Accessibility | Contrast ตาม WCAG 2.1 AA สำหรับข้อความ · รองรับการขยายตัวอักษรของเบราว์เซอร์ถึง 200% (WCAG 1.4.4) · เคารพ reduce motion · ปุ่มมี accessibility label ทั้งสองภาษา |
 | NFR-04 | Security | ไม่มี privileged secret ใน client · RLS ทุกตาราง · authorization ฝั่ง server · dependency scan ใน CI |
 | NFR-05 | Privacy | ตาม PRIV-001 · ไม่เก็บพิกัดดิบ · ROPA ตาม PDPA ม.39 (ตรวจข้อยกเว้นกิจการขนาดเล็กใน SPIKE-002) |
 | NFR-06 | Cost | Daily cap ต่อ provider · แจ้งเตือนเมื่อใช้ถึง 50% และ 80% ของงบเดือน |
 | NFR-07 | Operability | Founder ดูแลได้คนเดียว: ไม่มี server ที่ต้อง patch เอง, runbook 1 หน้าสำหรับ kill switch |
 | NFR-08 | Localization | ไทยเป็นค่าเริ่มต้น อังกฤษครบทุกหน้าจอ |
+| NFR-09 | Browser support | iOS Safari และ Chrome Android (เวอร์ชันหลักล่าสุด 2 รุ่น) · in-app browser ของ LINE ตรวจแยก (R-008) · Geolocation API ใช้ได้เฉพาะ HTTPS และขอเมื่อผู้ใช้กดปุ่มเท่านั้น |
 
 ## 9. Definition of Done (ใช้ร่วมทุก requirement)
 
