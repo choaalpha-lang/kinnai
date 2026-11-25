@@ -1,6 +1,6 @@
 # KinNai — Decision Log
 
-อัปเดตล่าสุด: 2026-11-11 · ผู้ตัดสินใจ: Founder (คนเดียว) · แหล่งอ้างอิง: `docs/reference/kinnai_product_blueprint_v1.2.html` และคำตอบของ Founder ในรอบทบทวนต้นแบบ
+อัปเดตล่าสุด: 2026-11-26 · ผู้ตัดสินใจ: Founder (คนเดียว) · แหล่งอ้างอิง: `docs/reference/kinnai_product_blueprint_v1.2.html`, `docs/reference/kinnai_10x_strategy_v1.0.html` และคำตอบของ Founder ในรอบทบทวน
 
 สถานะ: **Confirmed** = Founder ตัดสินแล้ว · **Assumption** = การตีความของ Claude Code รอ Founder ยืนยัน · **Hypothesis** = ยังไม่มีหลักฐาน · **Open** = ยังไม่มีคำตอบ
 
@@ -10,18 +10,25 @@
 |---|---|---|---|---|
 | D-001 | นิยาม Solo Time to Yes | เริ่มจับเวลาเมื่อผู้ใช้กำหนด criteria เสร็จ จบเมื่อยืนยันร้าน | Founder 2026-11-11 | ANALYTICS_PLAN §2, SOLO-003 |
 | D-002 | ความหมายของงบ | งบเป็นเพดาน ร้านที่ถูกกว่าก็แสดง | Founder 2026-11-11 | SOLO-001, SOLO-002 |
-| D-003 | Kampai โหวตเสมอ | ผู้ตั้งนัด (organizer) เป็นคนเลือกจากร้านที่คะแนนเท่ากัน | Founder 2026-11-11 | GRP-001, GRP-002 (อนาคต) |
+| D-003 | Kampai โหวตเสมอ | ผู้ตั้งนัด (organizer) เป็นคนเลือกจากร้านที่คะแนนเท่ากัน | Founder 2026-11-11 | GRP-001, GRP-002 |
 | D-004 | คนไม่ตอบใน Kampai | นับเป็นงดออกเสียง | Founder 2026-11-11 | GRP-001, ANALYTICS_PLAN §3 |
 | D-005 | Consent ตำแหน่งและ retention | ทำตามกฎหมายที่เกี่ยวข้อง (PDPA พ.ศ. 2562) | Founder 2026-11-11 | PRD §7, PRIV-001, SPIKE-002 |
 | D-006 | Tech stack | Supabase, PostHog, Sentry, GitHub + GitHub Actions ตาม blueprint ส่วน Expo + React Native + EAS **ถูกแทนด้วย D-013 สำหรับ MVP1** | Blueprint V1.2, แก้โดย D-013 | PRD §6 |
 | D-007 | ขอบเขต spec | เฉพาะ MVP1 เข้า detailed specification | Blueprint V1.2 | REQUIREMENTS |
-| D-008 | สิ่งที่ไม่ทำใน MVP1 | Production payments, referral, merchant portal, LLM recommendation | Blueprint V1.2 | PRD §3 |
+| D-008 | สิ่งที่ไม่ทำใน MVP1 | Production payments, referral, merchant portal, LLM recommendation (ปรับรายได้โดย D-018) | Blueprint V1.2 | PRD §3 |
 | D-009 | งบ MVP | เพดานวางแผน THB 45,000 (ทบทวนได้) | Blueprint V1.2 | GATE1 §5 |
-| D-011 | Login | บังคับ login ด้วย Sign in with Apple และ Google เท่านั้น **ตอนกด "กินร้านนี้" ครั้งแรก** (แบบ ค2: เห็นผลแนะนำก่อน) ผู้ใช้เลือกเงื่อนไขและดูร้านได้โดยไม่ต้อง login LINE Login เลื่อนไปหลัง MVP1 แทนที่ A-006 | Founder 2026-11-11 (แก้จาก ค1 เป็น ค2 ในวันเดียวกัน) | AUTH-001, PLAT-002, PRIV-001 |
+| ~~D-011~~ | Login **(ถูกแทนที่โดย D-017 ตั้งแต่ 2026-11-26)** | บังคับ login ด้วย Sign in with Apple และ Google เท่านั้น **ตอนกด "กินร้านนี้" ครั้งแรก** (แบบ ค2: เห็นผลแนะนำก่อน) ผู้ใช้เลือกเงื่อนไขและดูร้านได้โดยไม่ต้อง login LINE Login เลื่อนไปหลัง MVP1 แทนที่ A-006 | Founder 2026-11-11 (แก้จาก ค1 เป็น ค2 ในวันเดียวกัน) | AUTH-001, PLAT-002, PRIV-001 |
 | D-012 | Link account | หนึ่งบัญชี KinNai เชื่อมได้ทั้ง Apple และ Google ต้องเหลืออย่างน้อย 1 ช่องทาง | Founder 2026-11-11 | AUTH-001 |
 | D-013 | ช่องทางส่งมอบ MVP1 | MVP1 เป็น **web app แบบ mobile-first** (responsive, เพิ่มลงหน้าจอหลักแบบ PWA ได้) เพื่อทดสอบกับผู้ใช้จริงก่อน ยังไม่ทำแอปบน App Store / Google Play การทำ native app ตัดสินหลังมีผลทดสอบ web | Founder 2026-11-24 | PRD §6, PLAT-001, REL-001, SETUP_CHECKLIST |
 | D-014 | Login บนเว็บ | คง Sign in with Apple และ Google ทั้งคู่ เพื่อรองรับผู้ใช้ iOS และ Android (ปิด Q-010) ต้องมี Apple Developer Program (USD 99 ต่อปี) ตั้งแต่เริ่ม Build | Founder 2026-11-24 | AUTH-001, SETUP_CHECKLIST |
-| D-015 | ช่องทางแจกผู้ทดสอบ | แจกแบบ referral ในกลุ่มคนรู้จักก่อน ไม่ทำแคมเปญสาธารณะใน MVP1 (ปิด Q-012) ยังไม่ใช่ระบบ referral ในแอป (REF-001 อยู่ MVP2) | Founder 2026-11-24 | UXR-001, ANALYTICS_PLAN §6 |
+| D-015 | ช่องทางแจกผู้ทดสอบ (ปรับโดย D-022) | แจกแบบ referral ในกลุ่มคนรู้จักก่อน ไม่ทำแคมเปญสาธารณะใน MVP1 (ปิด Q-012) ยังไม่ใช่ระบบ referral ในแอป (REF-001 อยู่ MVP2) | Founder 2026-11-24 | UXR-001, ANALYTICS_PLAN §6 |
+| D-016 | ลำดับความสำคัญของ MVP1 | **Kampai-first:** สร้าง Kampai Protocol (ลิงก์กลุ่มบนเว็บ ผู้ร่วมกลุ่มโหวตโดยไม่ลงแอปและไม่สมัคร) เป็นงานแรก Solo เป็นรอง ใช้ระบบแนะนำร่วมกัน | Founder 2026-11-26 (ยอมรับข้อเสนอใน `STRATEGY_ALIGNMENT.md` ทั้งหมด) ข้อ P-1 | PRD §1 §3, REQUIREMENTS (GRP-002 ถึง 005), ROADMAP |
+| D-017 | นโยบาย login | **ผู้ร่วมกลุ่มไม่ต้อง login เลย** ผู้จัดและ Solo ใช้งานและตัดสินใจได้โดยไม่ login (ใช้ Supabase anonymous user) แล้วขอ login ด้วย Apple/Google **หลังตัดสินใจสำเร็จ ข้ามได้** แทนที่ D-011 ส่วน D-012 (เชื่อมบัญชี) และ D-014 (Apple + Google) คงเดิม | Founder 2026-11-26 (ยอมรับข้อเสนอใน `STRATEGY_ALIGNMENT.md` ทั้งหมด) ข้อ P-2 | AUTH-001, PLAT-002, GRP-003, ANALYTICS_PLAN |
+| D-018 | รายได้ | **Kampai ฟรี** (growth loop) ถอด MON-001 (Plus ฿99), MON-002 (Kampai Premium ฿39), REF-001 (referral credit) ออก Intent Exchange และ Workplace ทดลองเป็น pilot แบบ manual นอกผลิตภัณฑ์ ใน MVP1 สร้างเฉพาะโครงข้อมูล intent แบบไม่ระบุตัวบุคคล (INT-001) ไม่ขายข้อมูลส่วนบุคคลและไม่แสดง offer | Founder 2026-11-26 (ยอมรับข้อเสนอใน `STRATEGY_ALIGNMENT.md` ทั้งหมด) ข้อ P-3 | BMC, ROADMAP, INT-001, WPL-001 |
+| D-019 | แบรนด์ | ใช้ชุดสีและโลโก้ตาม strategy: Hungry Red #E53935, Soft Coral #FFE8E6, Midnight Ink #0F172A, โลโก้ K + Fork (ต้องสร้างเป็น vector และตรวจชื่อการค้า) สีสถานะเขียวและเหลืองคงไว้ | Founder 2026-11-26 (ยอมรับข้อเสนอใน `STRATEGY_ALIGNMENT.md` ทั้งหมด) ข้อ P-4 | DESIGN_SPEC §2, BRAND-001 |
+| D-020 | เกณฑ์ผ่านของ MVP1 | ใช้ gate 90 วันของ strategy เป็นเกณฑ์หลัก: วัน 1–30 K ≥ 1.2 และ ≥ 80% ของกลุ่มได้ผลภายใน 5 นาที · วัน 31–60 organizer repeat ≥ 30% ภายใน 30 วัน · วัน 61–90 จ่ายซ้ำหรือต่อสัญญา (นอก app) Solo TTY เป็น guardrail | Founder 2026-11-26 (ยอมรับข้อเสนอใน `STRATEGY_ALIGNMENT.md` ทั้งหมด) ข้อ P-5 | ANALYTICS_PLAN §3, ROADMAP |
+| D-021 | เป้า 10X และงบ | เป้า MAU 10 ล้านและกำไร ฿1,000 ล้านเป็น **เป้าทิศทาง ไม่ใช่เงื่อนไขของ spec** เพดาน ฿45,000 (D-009) ยังใช้ เปิดงบเพิ่มเมื่อผ่าน gate รายขั้น | Founder 2026-11-26 (ยอมรับข้อเสนอใน `STRATEGY_ALIGNMENT.md` ทั้งหมด) ข้อ P-6 | PRD, GATE1 |
+| D-022 | เครือข่ายผู้ทดสอบ | เริ่มจาก **2–3 เครือข่ายที่ไม่ทับซ้อนกัน** (เช่น ที่ทำงาน มหาวิทยาลัย ครอบครัว) แทนกลุ่มคนรู้จักกลุ่มเดียว รายงาน saturation และช่วงความเชื่อมั่นของ K (ปรับ D-015) | Founder 2026-11-26 (ยอมรับข้อเสนอใน `STRATEGY_ALIGNMENT.md` ทั้งหมด) | UXR-001, ANL-002 |
 | D-010 | Traceability | Requirement ID แยกจาก Linear issue ID ห้ามแต่ง Linear ID | Blueprint V1.2 | LINEAR_WORKFLOW |
 
 ## 2. Assumptions
@@ -35,18 +42,29 @@
 | A-003 | D-004 | งดออกเสียงไม่นับเป็นคะแนนให้ร้านใด แต่ยังอยู่ในตัวหารของ participation rate | สอดคล้องกับ blueprint ที่ให้บันทึกการไม่ตอบเพื่อไม่ให้ KPI ดูดีเกินจริง | ต้องนิยามตัวหารใหม่ |
 | A-004 | D-003 | ต้องมีอย่างน้อย 2 เสียง (รวม organizer) จึงปิดโหวตได้ | ป้องกัน "group decision" ที่มีคนเดียวตัดสิน | Organizer ปิดได้ทันทีด้วยเสียงเดียว |
 | A-005 | D-005 | ข้อเสนอ retention: ประวัติการตัดสินใจ 12 เดือน, ไม่เก็บพิกัดดิบ (ใช้ในคำขอแล้วทิ้ง), consent log เก็บตลอดอายุบัญชี + ระยะที่จำเป็นทางกฎหมาย | PDPA ไม่กำหนดตัวเลข แต่บังคับให้แจ้งระยะเวลา (ม.23) และลบเมื่อพ้นความจำเป็น (ม.37(3)) | ต้องมีตัวเลขอื่นก่อนเขียน privacy notice |
-| ~~A-006~~ (ยกเลิก) | D-006 | MVP1 ใช้ Supabase anonymous sign-in ไม่มีหน้าสมัครสมาชิก | ลด friction ต่อ TTY และลดข้อมูลส่วนบุคคลที่เก็บ (data minimization ม.22) | ต้องเพิ่ม requirement เรื่อง Auth |
+| ~~A-006~~ (ยกเลิก 2026-11-11 แนวคิด anonymous กลับมาใน D-017) | D-006 | MVP1 ใช้ Supabase anonymous sign-in ไม่มีหน้าสมัครสมาชิก | ลด friction ต่อ TTY และลดข้อมูลส่วนบุคคลที่เก็บ (data minimization ม.22) | ต้องเพิ่ม requirement เรื่อง Auth |
+| A-007 | D-017 | หลังกด "ไว้ทีหลัง" ที่หน้า login จะไม่ขอซ้ำภายใน 7 วัน | ลดการรบกวนและไม่ทำให้ผู้ใช้เลิกใช้ | ปรับตามข้อมูล auth_dismissed |
+| A-008 | D-016 | ลิงก์กลุ่มหมดอายุ 24 ชั่วโมง · สมาชิกสูงสุด 20 คนต่อกลุ่ม · เวลาปิดโหวตค่าเริ่มต้น 5 นาที | ให้ตรงกับเป้า Group TTY ≤ 5 นาที จำกัดต้นทุนและการใช้ผิด | ปรับตัวเลขตามผลทดสอบ |
+| A-009 | D-018 | Intent record เก็บจำนวนคนเป็นช่วง (2–3, 4–6, 7+) ไม่มี member id หรือชื่อเล่น | PDPA ม.22 เก็บเท่าที่จำเป็น และเลี่ยงการระบุตัวบุคคล | ต้องขยาย SPIKE-002 |
+| A-010 | D-020 | "บุคคลที่ไม่ซ้ำ" ใน K นับจาก `member_pseudo_id` ซึ่งผูกกับ anonymous user ของ Supabase บุคคลเดียวกันข้ามอุปกรณ์หรือหลังล้างเบราว์เซอร์รวมกันไม่ได้ | ผู้ร่วมกลุ่มไม่มีบัญชี | ต้องระบุข้อจำกัดนี้ในรายงาน K |
+| A-011 | D-016 | ข้อมูลกลุ่มและชื่อเล่นเก็บ 30 วันหลังกลุ่มปิดแล้วลบ ส่วน intent record แบบรวมเก็บต่อได้ | data minimization | ต้องตัดสินพร้อม Q-002 |
+| A-012 | D-020 | Group TTY เริ่มที่ `group_decision_start` (ผู้จัดกด "เริ่มโหวต") จบที่ `group_decision_confirmed` และเก็บ end-to-end group time (นับจาก `group_created`) เป็น guardrail แยก | ไม่ให้เวลารอเพื่อนเข้ากลุ่มซ่อนอยู่นอก KPI (หลักเดียวกับ A-002) | ต้องแก้สูตรใน ANALYTICS_PLAN §3 |
 
 ## 3. Hypotheses (ยังไม่มีหลักฐาน)
 
 | ID | สมมติฐาน | หลักฐานที่ต้องมี | เมื่อไร |
 |---|---|---|---|
 | H-001 | Solo TTY median ≤ 30 วินาที | ข้อมูล beta จริง ไม่ใช่ต้นแบบ | Gate 3–4 |
-| H-002 | Group TTY ≤ 5 นาที | MVP1.5 | หลัง MVP1 |
-| H-003 | ผู้ใช้ยอมจ่าย Plus ฿99/เดือน และ Kampai ฿39/ครั้ง | การจ่ายเงินจริง | MVP1.5–2 |
+| H-002 | Group TTY ≤ 5 นาที และ ≥ 80% ของกลุ่มที่เริ่มตัดสินใจได้ผลภายใน 5 นาที | ข้อมูล beta วัน 1–30 | Gate 4 |
+| ~~H-003~~ | ผู้ใช้ยอมจ่าย Plus ฿99/เดือน และ Kampai ฿39/ครั้ง | **ยกเลิก 2026-11-26 (D-018)** แทนด้วย H-010, H-011 | — |
 | H-004 | 3 ร้านที่แนะนำ "ตรงใจ" พอให้ตัดสินใจได้ | อัตรา `decision_confirmed` และ feedback 👍 | Gate 3–4 |
 | H-005 | Founder คนเดียวดูแลระบบได้ในเวลาที่รับได้ต่อสัปดาห์ | บันทึกชั่วโมงทำงานจริง | ต่อเนื่อง |
 | H-006 | ต้นทุน API ต่อการตัดสินใจหนึ่งครั้งอยู่ในงบ | ราคาและโควตาของ provider (Q-001) | ก่อน Gate 2 |
+| H-007 | Kampai Link แพร่กระจายได้ K ≥ 1.2 (K = I × A × H) จากเครือข่ายที่ไม่ซ้ำ | ข้อมูล beta วัน 1–30 พร้อมช่วงความเชื่อมั่นและ saturation | Gate 4 |
+| H-008 | ผู้จัด ≥ 30% สร้างกลุ่มที่สองภายใน 30 วันหลังกลุ่มแรกสำเร็จ | ข้อมูล beta วัน 31–60 | Gate 4 |
+| H-009 | ผู้ร่วมกลุ่มโหวตได้โดยไม่ login ภายใน 3 แตะหลังเปิดลิงก์ | ทดสอบใช้งานจริงรวม in-app browser ของ LINE | Gate 3–4 |
+| H-010 | แบรนด์ยอมจ่ายต่อ verified outcome (฿40 ต่อครั้งเป็นสมมติฐานของ strategy) และจ่ายซ้ำ | pilot manual วัน 61–90 | หลัง MVP1 |
+| H-011 | องค์กรยอมจ่าย Workplace (฿5,000 ต่อองค์กรต่อเดือนเป็นสมมติฐาน) โดยไม่ต้อง customize รายราย | pilot วัน 61–90 | หลัง MVP1 |
 
 ## 4. Open questions
 
@@ -62,10 +80,14 @@
 | ~~Q-010~~ | คง Sign in with Apple บนเว็บหรือไม่ | Founder | — | **ปิดแล้ว 2026-11-24:** คงทั้งสอง (D-014) |
 | Q-011 | เงื่อนไข hosting: แผนฟรีของ Vercel จำกัดการใช้เชิงพาณิชย์หรือไม่ เมื่อทดสอบกับผู้ใช้จริง ต้องใช้แผนเสียเงินหรือ host อื่นหรือไม่ | Claude Code ตรวจใน Gate 2 | Gate 2 | Open: ยังไม่ได้ตรวจเงื่อนไขปัจจุบัน |
 | ~~Q-012~~ | ช่องทางแจกลิงก์ทดสอบ | Founder | — | **ปิดแล้ว 2026-11-24:** referral ในกลุ่มคนรู้จัก (D-015) |
-| Q-013 | ผู้ทดสอบจะแชร์ลิงก์กันผ่านแอปอะไร (LINE, Messenger, อื่น ๆ) และตั้งเป้าผู้ทดสอบกี่คน | Founder | ก่อน Gate 4 | Open: ผลต่อ R-008 โดยตรง |
-| Q-014 | ปรับ scope และนโยบาย login ตาม 10X Strategy v1.0 (P-1 ถึง P-6 ใน `STRATEGY_ALIGNMENT.md`) | Founder | ก่อน Gate 2 | Open: เอกสารเป็นข้อเสนอ ยังไม่เปลี่ยน D-011 หรือ requirement ใดเลย |
+| Q-013 | ผู้ทดสอบจะแชร์ลิงก์กันผ่านแอปอะไร (LINE, Messenger, อื่น ๆ) และตั้งเป้ากี่เครือข่ายกี่กลุ่ม (D-022) | Founder | ก่อน Gate 4 | Open: ผลต่อ R-008 โดยตรง |
+| ~~Q-014~~ | ปรับ scope และนโยบาย login ตาม 10X Strategy v1.0 | Founder | — | **ปิดแล้ว 2026-11-26:** ตัดสินตามที่แนะนำทั้งหมด (D-016 ถึง D-022) |
+| Q-015 | กติกาเมื่อโหวตเสมอแล้วผู้จัดไม่เลือกภายในเวลาที่กำหนด (D-003 กำหนดให้ผู้จัดเลือก แต่ไม่ได้ระบุกรณีผู้จัดหาย) | Founder | Gate 2 | Open (ข้อเสนอ: เตือนผู้จัด แล้วถ้าไม่เลือกภายใน 5 นาทีให้กลุ่มปิดโดยไม่มีผล และให้เริ่มโหวตใหม่ได้) |
+| Q-016 | ตรวจเครื่องหมายการค้าของชื่อ KinNai และโลโก้ K + Fork ก่อนสร้างไอคอนและโดเมนจริง | Founder | ก่อนเปิด beta | Open |
+| Q-017 | วิธีแชร์ลิงก์กลับเข้า LINE จากเว็บ (ลิงก์ share ของ LINE และ Web Share API) และการแสดงตัวอย่างลิงก์ ยังไม่ได้ตรวจเอกสารของ LINE | Claude Code ตรวจใน Gate 2 | Gate 2 | Open |
+| Q-018 | ขอบเขต SPIKE-002 ต้องครอบคลุม intent data แบบรวมและการติดตามผู้ใช้ไม่ระบุตัวตน (F-09) | Founder + ที่ปรึกษากฎหมาย | ก่อน Gate 4 | Open |
 | Q-009 | ต้องขออีเมลจาก Apple/Google หรือใช้เฉพาะ account ID | Founder | Gate 2 | Open (ข้อเสนอ: ไม่ขออีเมล) |
-| Q-008 | GRP-001 จะ port เข้าแอปจริงใน MVP1 หรือใช้ HTML prototype ที่มีแล้ว | Founder | Gate 2 | Open (ข้อเสนอ: ใช้ HTML ที่มีแล้ว) |
+| ~~Q-008~~ | GRP-001 จะ port เข้าแอปจริงใน MVP1 หรือไม่ | Founder | — | **ปิดแล้ว 2026-11-26:** สร้าง Kampai จริงใน MVP1 (D-016) ต้นแบบ HTML เป็นแบบอ้างอิง |
 
 ## 5. Risks
 
@@ -76,8 +98,12 @@
 | R-003 | ภาระ PDPA ของ data controller ตกที่ Founder คนเดียว | กลาง | Data minimization, anonymous auth, ไม่เก็บพิกัดดิบ |
 | R-004 | KPI TTY ดูดีกว่าประสบการณ์จริง | กลาง | A-001, A-002 และรายงานคู่กับ completion rate |
 | R-006 | Apple ตั้งคำถามเรื่องบังคับ login ก่อนยืนยันร้าน (Guideline 5.1.1(v)) **ยังไม่เกิดจนกว่าจะส่ง native app (D-013)** | ไม่มีใน web MVP1 (เดิมกลาง) | ผู้ใช้ดูคำแนะนำได้โดยไม่ต้องมีบัญชี; เตรียมเหตุผลว่าบัญชีใช้บันทึกการตัดสินใจและ sync ความชอบ ผลจริง UNKNOWN จนกว่าจะส่ง review |
-| R-007 | Login ครั้งแรกอยู่ระหว่าง `criteria_completed` กับ `decision_confirmed` จึงทำให้ TTY ครั้งแรกยาวขึ้นและ completion rate ลดลง | กลาง | แยกรายงาน TTY ด้วย `included_auth` และดู `auth_completion_rate` ใน ANALYTICS_PLAN §2, §4 |
-| R-008 | Google ไม่อนุญาต OAuth ใน embedded webview (นโยบาย secure browsers) ผู้ที่เปิดลิงก์จาก in-app browser เช่น LINE อาจ login ไม่ได้ ผลจริงของแต่ละแอป UNKNOWN | สูง (แจกแบบ referral คนรู้จัก ผ่านแอปแชตที่ยังไม่ระบุ ถ้าเป็น LINE เสี่ยงสูง) | ตรวจ in-app browser ที่หน้า login แล้วแสดงปุ่ม "เปิดใน Safari/Chrome" พร้อมคำอธิบาย ทดสอบบน LINE จริงก่อนแจก |
+| R-007 | เมื่อขอ login หลังตัดสินใจ (D-017) ผู้ใช้อาจไม่ login จนวัด organizer repeat ไม่ได้ และนับเป็นคนใหม่เมื่อล้างข้อมูลเบราว์เซอร์ (เดิม: login ทำให้ TTY ยาวขึ้น ไม่เกิดแล้ว) | กลาง | รายงาน repeat แยกกลุ่มที่ login กับไม่ login ขอ login ด้วยเหตุผลที่ผู้ใช้เห็นประโยชน์ ดู ANALYTICS_PLAN §4 |
+| R-008 | Google ไม่อนุญาต OAuth ใน embedded webview (นโยบาย secure browsers) ผู้ที่เปิดลิงก์จาก in-app browser เช่น LINE อาจ login ไม่ได้ ผลจริงของแต่ละแอป UNKNOWN | กลาง (ลดจากสูงโดย D-017: ผู้ร่วมกลุ่มไม่ต้อง login จึงไม่กระทบ ยังกระทบผู้จัดที่เปิดใน LINE ตอนถูกขอ login) | ตรวจ in-app browser ที่หน้า login แล้วแสดงปุ่ม "เปิดใน Safari/Chrome" พร้อมคำอธิบาย ทดสอบบน LINE จริงก่อนแจก |
 | R-009 | Web ไม่มี secure storage ระดับ native และ iOS Safari อาจล้างข้อมูลเว็บของเว็บที่ไม่ได้เปิดเป็นเวลานาน ทำให้ข้อมูลก่อน login หาย | ต่ำ | เก็บข้อมูลก่อน login เป็นแค่ความชอบชั่วคราว ข้อมูลสำคัญอยู่ใน Supabase หลัง login |
 | R-010 | เว็บเก็บ identifier ผ่าน cookie/localStorage ของ analytics ก่อนได้ consent (PDPA ม.19) | กลาง | ไม่เริ่ม PostHog จนกว่าจะยอมรับ หรือใช้โหมดที่ไม่เก็บ identifier ถาวร |
-| R-005 | ขอบเขตบาน (Kampai จริง, Plus) ก่อนพิสูจน์ Solo | กลาง | Stage gate, GRP-001 เป็น Could |
+| R-005 | ขอบเขตบานไปสู่ระบบรายได้ (ads, marketplace, integration) ก่อนผ่าน gate วัน 1–60 | กลาง | D-018, D-021: ไม่สร้าง Intent Exchange หรือ Workplace integration ใน MVP1 ใช้ stage gate |
+| R-011 | ค่า K ไม่น่าเชื่อถือจากเครือข่ายที่ทับซ้อนกันและตัวอย่างเล็ก (F-07) | สูง | D-022: 2–3 เครือข่ายที่ไม่ทับซ้อน รายงาน saturation และช่วงความเชื่อมั่น ไม่สรุป gate จากข้อมูลน้อยเกินไป |
+| R-012 | การนับผู้ใช้ไม่ซ้ำโดยไม่มีบัญชี และข้อมูล intent ของกลุ่ม ขัด PDPA หากไม่มีฐานทางกฎหมายและ consent (F-09) | สูง | INT-001 เก็บเฉพาะข้อมูลรวมไม่ระบุตัวบุคคล ไม่ส่งออก ขยาย SPIKE-002 (Q-018) |
+| R-013 | เป้า 10X ผลักให้สร้างเกินหลักฐาน (F-08) | กลาง | D-021: เป้าทิศทาง เพดานงบเดิม เปิดงบเมื่อผ่าน gate |
+| R-014 | ผู้ใช้ไม่ระบุตัวตนสร้างกลุ่มจำนวนมากหรือใช้ลิงก์ผิดวัตถุประสงค์ ทำให้ค่า Places API พุ่ง | กลาง | rate limit ต่อ anonymous user และต่อ IP, จำกัดจำนวนกลุ่มต่อวัน, หนึ่งการค้นหาต่อกลุ่ม, daily cap และ kill switch (PLAT-003) |

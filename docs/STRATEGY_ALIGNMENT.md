@@ -1,6 +1,6 @@
 # KinNai — ข้อเสนอปรับ App ให้สอดคล้อง 10X Strategy
 
-วันที่: 2026-11-26 · สถานะ: **ข้อเสนอ ยังไม่มีการตัดสินใจใดเปลี่ยน** เอกสารอื่นใน `docs/` และต้นแบบยังเป็นฉบับเดิมจนกว่า Founder ตัดสิน
+วันที่: 2026-11-26 · สถานะ: **Founder ยอมรับทั้งหมดแล้ว (P-1 ถึง P-6 และการเริ่มจาก 2–3 เครือข่ายที่ไม่ทับซ้อน)** บันทึกเป็น D-016 ถึง D-022 ใน `DECISION_LOG.md` และอัปเดตเอกสารใน `docs/` ตามแล้ว ยังไม่ได้ปรับต้นแบบ HTML (`prototype/`) ซึ่งยังเป็นฉบับเดิม
 แหล่งอ้างอิง: `docs/reference/kinnai_10x_strategy_v1.0.html` (Strategy v1.0, Nov 2026) · `DECISION_LOG.md` · `REQUIREMENTS.md` · `ANALYTICS_PLAN.md`
 
 ## 1. Executive Summary
