@@ -6,7 +6,7 @@
 
 | # | Req ID | งาน | Priority | MoSCoW | ขึ้นกับ | Gate | Linear ID |
 |---|---|---|---|---|---|---|---|
-| 1 | SPIKE-001 | ประเมิน Places provider: ความครอบคลุม ข้อมูลราคา license ต้นทุน | Urgent | Must | — | ก่อน Gate 2 | |
+| 1 | SPIKE-001 | ประเมิน Places provider: ความครอบคลุม ข้อมูลราคา license ต้นทุน (ส่วน desk research เสร็จ 2026-11-25 ดู `SPIKE-001_PLACES_PROVIDER.md` เหลือส่วนทดสอบข้อมูลจริง) | Urgent | Must | — | ก่อน Gate 2 | |
 | 2 | SPIKE-002 | ทบทวน PDPA: notice, ฐานทางกฎหมาย, retention, ผู้เยาว์, โอนข้ามประเทศ | High | Must | — | ก่อน Gate 4 | |
 | 3 | PLAT-001 | Web app shell: Next.js + TS, mobile-first, PWA manifest, bottom nav, i18n, tokens, CI + e2e smoke, Sentry | High | Must | Gate 2 | Build | |
 | 4 | PLAT-002 | Supabase schema, Auth providers (Apple, Google), RLS + RLS tests | High | Must | PLAT-001 | Build | |

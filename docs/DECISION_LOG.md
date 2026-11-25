@@ -52,7 +52,7 @@
 
 | ID | คำถาม | เจ้าของ | ต้องตอบก่อน | สถานะ |
 |---|---|---|---|---|
-| Q-001 | ผู้ให้บริการ Places และเงื่อนไข license ในการแสดงผลและ cache | Founder + SPIKE-001 | Gate 2 | **Open** (Founder ยังไม่ได้ตัดสินในรอบ 2026-11-11) |
+| Q-001 | ผู้ให้บริการ Places และเงื่อนไข license ในการแสดงผลและ cache | Founder + SPIKE-001 | Gate 2 | **Open** (2026-11-25: desk research เสร็จใน `SPIKE-001_PLACES_PROVIDER.md` ข้อเสนอ: ทดสอบ Google เทียบ Foursquare และ Longdo ด้วยข้อมูลจริงก่อนตัดสิน ยังต้องมีพื้นที่เปิดตัวและ API key) |
 | Q-002 | ตัวเลข retention ที่จะประกาศ (ดู A-005) | Founder + ที่ปรึกษากฎหมาย | Gate 4 | Open |
 | Q-003 | อายุผู้ใช้ขั้นต่ำและวิธีจัดการผู้เยาว์ (PDPA ม.20) | Founder + ที่ปรึกษากฎหมาย | Gate 4 | Open |
 | Q-004 | Region ของ Supabase และฐานการโอนข้อมูลไปต่างประเทศ (PDPA ม.28–29) | Founder | Gate 2 | Open |
