@@ -56,6 +56,10 @@ Property ร่วมทุก event: `user_id` (Supabase user UUID ไม่ใ
 | `group_vote_cast` | โหวต (นับการเปลี่ยนเสียงด้วย) | `group_id`, `member_pseudo_id`, `is_change` |
 | `group_vote_closed` | ปิดโหวต | `group_id`, `votes`, `tie`, `abstained`, `closed_by` (organizer / deadline) |
 | `group_tie_broken` | ผู้จัดเลือกเมื่อเสมอ | `group_id`, `by: organizer` |
+| `group_tie_reminder_shown` | แสดงคำเตือนผู้จัดเมื่อเสมอ (D-023) | `group_id` |
+| `group_closed_no_result` | ผู้จัดไม่เลือกภายใน 5 นาที กลุ่มปิดโดยไม่มีผล | `group_id`, `reason: tie_unresolved` |
+| `group_vote_restarted` | ผู้จัดเริ่มโหวตใหม่ | `group_id` |
+| `group_deadline_reached_below_quorum` | ถึงเวลาปิดแต่มีเสียงน้อยกว่า 2 | `group_id`, `voices` |
 | `group_deadline_extended` | ผู้จัดขยายเวลา | `group_id` |
 | `group_decision_confirmed` | ผู้จัดยืนยันผล | `group_id`, `time_to_yes_ms`, `within_5min`, `abstained`, `tie_broken_by_organizer` |
 | `group_result_shared` | แชร์การ์ดสรุป | `group_id`, `channel` |
@@ -86,7 +90,7 @@ Property ร่วมทุก event: `user_id` (Supabase user UUID ไม่ใ
 **Group Time to Yes (Core Habit Metric)** = `group_decision_confirmed.ts − group_decision_start.ts` เป้า ≤ 5 นาที (A-012)
 **End-to-end group time (guardrail)** = `group_decision_confirmed.ts − group_created.ts` ไม่ให้เวลารอเพื่อนเข้ากลุ่มซ่อนอยู่นอก KPI
 
-**Group completion rate** = กลุ่มที่ยืนยัน ÷ กลุ่มที่มี `group_decision_start` (กลุ่มที่ยกเลิกหรือหมดอายุอยู่ในตัวหาร)
+**Group completion rate** = กลุ่มที่ยืนยัน ÷ กลุ่มที่มี `group_decision_start` (กลุ่มที่ยกเลิกหรือหมดอายุอยู่ในตัวหาร) กลุ่มที่ปิดโดยไม่มีผลแล้วเริ่มโหวตใหม่นับเป็นกลุ่มเดิมและนาฬิกา Group TTY ไม่รีเซ็ต (D-023) ส่วนกลุ่มที่ปิดโดยไม่มีผลและไม่ได้เริ่มใหม่ถือว่าไม่สำเร็จและอยู่ในตัวหาร
 **Participation rate** = สมาชิกที่โหวต ÷ สมาชิกทั้งหมดที่เข้ากลุ่ม ผู้งดออกเสียงอยู่ในตัวหาร (D-004, A-003)
 **Tie rate** = กลุ่มที่ `tie = true` ÷ กลุ่มที่ปิดโหวต ใช้ติดตามว่า D-003 ถูกใช้บ่อยแค่ไหน
 

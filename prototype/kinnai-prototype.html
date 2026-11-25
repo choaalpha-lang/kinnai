@@ -129,13 +129,20 @@ h3{font-size:15px;margin:0;line-height:1.4}
   .phone{position:static;height:auto;min-height:640px;border-width:0;border-radius:22px;border:1px solid var(--line);max-width:460px;width:100%;margin:0 auto}
   .screen{overflow:visible}
 }
+.cd{font-weight:700;font-variant-numeric:tabular-nums;color:var(--coral)}
+.ktab{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.ktab div{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.ktab b{font-size:22px;line-height:1.2;font-variant-numeric:tabular-nums}
+.ktab small{color:var(--muted);font-size:11.5px}
+.povbar{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--mango-soft);color:var(--mango-text);border-radius:10px;padding:6px 10px;font-size:11.5px}
+.sp{height:2px}
 </style>
 
 <div class="wrap">
   <header class="head">
     <div>
       <h1><span>KinNai</span> MVP1 Prototype</h1>
-      <p>ต้นแบบคลิกได้สำหรับทบทวนก่อน Gate 1 ครอบคลุม AUTH-001, SOLO-001 ถึง 005 และ Kampai (GRP-001) ใช้ข้อมูลจำลองทั้งหมด</p>
+      <p>ต้นแบบคลิกได้ปรับตาม D-016 ถึง D-023: Kampai เป็นแท็บแรก ผู้ร่วมกลุ่มโหวตโดยไม่ต้อง login ขอ login หลังตัดสินใจและข้ามได้ ใช้ข้อมูลจำลองทั้งหมดและชุดสีเดิมของแอป</p>
     </div>
     <span class="badge">ข้อมูลจำลอง · ยังไม่ใช่ระบบจริง</span>
   </header>
@@ -169,17 +176,19 @@ var R=[
 {id:14,th:'สลัดโรงเรือน',en:'Greenhouse Salad',c:'healthy',p:160,d:0.8,s:4.2},
 {id:15,th:'โพเกะแอนด์เกรน',en:'Poke & Grain',c:'healthy',p:290,d:1.1,s:4.4}
 ];
-var FRIENDS=[{n:'มิ้นท์',en:'Mint',likes:['jp','noodle']},{n:'ต้น',en:'Ton',likes:['isan','rice']},{n:'เบส',en:'Best',likes:['noodle','rice']},{n:'ฟ้า',en:'Fah',likes:[],silent:true}];
-var REQ=[['AUTH-001','เข้าสู่ระบบด้วย Apple หรือ Google และเชื่อมบัญชี'],['SOLO-001','เลือกงบ ประเภทอาหาร และระยะ'],['SOLO-002','แนะนำไม่เกิน 3 ร้านพร้อมเหตุผล'],['SOLO-003','ยืนยันการตัดสินใจและ Time to Yes'],['SOLO-004','เปิดแผนที่นำทางภายนอก'],['SOLO-005','ให้ feedback และจำความชอบ'],['GRP-001','Kampai ต้นแบบ (ข้อมูลจำลอง)']];
+var FRIENDS=[{n:'มิ้นท์',en:'Mint',likes:['jp','noodle']},{n:'ต้น',en:'Ton',likes:['isan','rice']},{n:'เบส',en:'Best',likes:['noodle','rice']},{n:'ฟ้า',en:'Fah',likes:[],silent:true},{n:'อ้อม',en:'Aom',likes:[],ghost:true}];
+var REQ=[['GRP-002','Kampai: สร้างกลุ่ม แชร์ลิงก์ โหวต สรุป'],['GRP-003','ผู้ร่วมกลุ่มโหวตโดยไม่ต้อง login'],['GRP-004','การ์ดสรุป แชร์ และปุ่มจัดนัดของคุณเอง'],['GRP-005','เวลาปิดโหวต และเสมอที่ผู้จัดไม่เลือกใน 5 นาที'],['ANL-002','ตัวชี้วัด K จาก event (ดูแผง K)'],['AUTH-001','ขอ login หลังตัดสินใจ ข้ามได้ และเชื่อมบัญชี'],['SOLO-001','Solo: เลือกงบ ประเภทอาหาร และระยะ'],['SOLO-002','แนะนำไม่เกิน 3 ร้านพร้อมเหตุผล'],['SOLO-003','ยืนยันการตัดสินใจและ Time to Yes'],['SOLO-004','เปิดแผนที่นำทางภายนอก'],['SOLO-005','ให้ feedback และจำความชอบ']];
 var PROV={apple:'Apple',google:'Google'};
-var KEY='kinnai_proto_v2';
+var KEY='kinnai_proto_v3';
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
-var P=Object.assign({lang:'th',auth:null,bud:'b2',cui:'any',rad:2,liked:[],disliked:[],hist:[]},load());
-var S={tab:'solo',screen:'home',scenario:'normal',loc:'granted',area:null,t0:null,tc:null,decision:null,list:[],seen:[],note:null,fb:null,fbr:null,sid:0,confirmDel:false,copy:null};
-var K=newK();
+var P=Object.assign({lang:'th',auth:null,authDismissedAt:null,bud:'b2',cui:'any',rad:2,liked:[],disliked:[],hist:[],groups:[]},load());
+var S={tab:'kampai',screen:'home',scenario:'normal',loc:'granted',inApp:false,pov:false,area:null,t0:null,tc:null,decision:null,list:[],seen:[],note:null,fb:null,fbr:null,sid:0,confirmDel:false,offer:{step:null,msg:null},offerKey:null,meOffer:false,fromPov:false};
+var M={groups:0,opened:0,joined:0,newOrg:0,cta:0};
+var DAY7=7*24*3600*1000,FIVE=5*60*1000;
+var K=newK(),PV=null;
 var cov={},log=[],T0=Date.now();
-function newK(){return {step:0,name:'มื้อเที่ยงทีม Product',bud:P.bud,area:'asok',joined:0,my:[P.cui==='any'?'noodle':P.cui],short:[],votes:{},mine:null,t0:null,tty:null,winner:null,tie:false,run:Date.now()+Math.random(),copy:null}}
+function newK(){return {step:0,name:'มื้อเที่ยงทีม Product',bud:P.bud,area:'asok',opened:0,joined:0,answered:0,my:[P.cui==='any'?'noodle':P.cui],short:[],votes:{},mine:null,t0:null,tc0:null,tty:null,e2e:null,winner:null,tie:false,tied:[],noResult:false,dlWarn:false,deadline:null,tieDeadline:null,abst:0,run:Date.now()+Math.random(),copy:null,src:S&&S.fromPov?'g_pov':null,remind:false}}
 function L(th,en){return P.lang==='th'?th:en}
 function nm(o){return P.lang==='th'?o.th:o.en}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -187,16 +196,18 @@ function by(a,id){for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i]}
 function cu(id){return by(CUIS,id)}
 function fmt(ms){return (ms/1000).toFixed(1)}
 function mmss(ms){var s=Math.floor(ms/1000);return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
-function ev(name,props){log.unshift({t:((Date.now()-T0)/1000).toFixed(1),n:name,p:props?JSON.stringify(props):''});if(log.length>40)log.pop()}
+function ev(name,props){log.unshift({t:((Date.now()-T0)/1000).toFixed(1),n:name,p:props?JSON.stringify(props):''});if(log.length>60)log.pop()}
 function touch(){if(!S.t0&&!S.decision){S.t0=Date.now();S.sid++;ev('session_start',{session:'s'+S.sid})}}
 function dist(r){return r.d<1?Math.round(r.d*1000)+L(' ม.',' m'):r.d.toFixed(1)+L(' กม.',' km')}
 function travel(r){return r.d<=1.2?L('เดิน ~','~')+Math.max(2,Math.round(r.d*12))+L(' นาที',' min walk'):L('นั่งรถ ~','~')+Math.round(r.d*4+3)+L(' นาที',' min ride')}
+function ratio(a,b){return b?(a/b):null}
+function f2(x){return x===null?'-':x.toFixed(2)}
 
 /* ---------- solo logic ---------- */
 function candidates(){var b=by(BUD,P.bud);return R.filter(function(r){return r.p<=b.max&&(P.cui==='any'||r.c===P.cui||r.c2===P.cui)&&r.d<=P.rad&&P.disliked.indexOf(r.id)<0}).map(function(r){var sc=r.s*10-r.d*4+(r.p>=b.min?3:0)+(P.liked.indexOf(r.id)>=0?4:0);return {r:r,sc:sc}}).sort(function(a,b){return b.sc-a.sc}).map(function(x){return x.r})}
-function reasons(r){var b=by(BUD,P.bud),a=[];a.push(L('อยู่ในงบ ประมาณ ฿'+r.p+' ต่อคน','Within budget, about ฿'+r.p+' per person'));a.push(L('ห่าง '+dist(r)+' '+travel(r),dist(r)+' away, '+travel(r)));if(P.cui!=='any')a.push(L('ตรงกับที่อยากกิน: '+cu(P.cui).th,'Matches your craving: '+cu(P.cui).en));else a.push(L('คะแนนรีวิว '+r.s+' จาก 5','Rated '+r.s+' of 5'));if(P.liked.indexOf(r.id)>=0)a.push(L('คุณเคยกดถูกใจร้านนี้','You liked this place before'));return a}
+function reasons(r){var a=[];a.push(L('อยู่ในงบ ประมาณ ฿'+r.p+' ต่อคน','Within budget, about ฿'+r.p+' per person'));a.push(L('ห่าง '+dist(r)+' '+travel(r),dist(r)+' away, '+travel(r)));if(P.cui!=='any')a.push(L('ตรงกับที่อยากกิน: '+cu(P.cui).th,'Matches your craving: '+cu(P.cui).en));else a.push(L('คะแนนรีวิว '+r.s+' จาก 5','Rated '+r.s+' of 5'));if(P.liked.indexOf(r.id)>=0)a.push(L('คุณเคยกดถูกใจร้านนี้','You liked this place before'));return a}
 function search(reroll){
-  touch();if(!S.tc){S.tc=Date.now();ev('criteria_completed',{session:'s'+S.sid,budget:P.bud,cuisine:P.cui,radius_km:P.rad})}cov['SOLO-001']=1;S.note=null;S.screen='loading';
+  touch();if(!S.tc){S.tc=Date.now();ev('criteria_completed',{session:'s'+S.sid,budget:P.bud,cuisine:P.cui,radius_km:P.rad,is_first_in_session:true})}cov['SOLO-001']=1;S.note=null;S.screen='loading';
   ev(reroll?'shortlist_rerolled':'recommendation_requested',{budget:P.bud,cuisine:P.cui,radius_km:P.rad,location:S.loc==='granted'?'device':S.area});
   var sid=S.sid;render();
   setTimeout(function(){
@@ -214,14 +225,41 @@ function search(reroll){
 }
 function mapUrl(r,area){var a=by(AREAS,area||S.area||'asok');return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(cu(r.c).en+' restaurant near '+a.en+' Bangkok')}
 
-/* ---------- kampai logic ---------- */
-function kMembers(){return FRIENDS.slice(0,K.joined)}
-function kShort(){var b=by(BUD,K.bud),resp=FRIENDS.filter(function(f){return !f.silent});
+/* ---------- kampai logic (organizer) ---------- */
+function kMembers(){return 1+K.joined}
+function kVoted(){return Object.keys(K.votes).length+(K.mine?1:0)}
+function kShort(){var b=by(BUD,K.bud),resp=FRIENDS.slice(0,K.opened).filter(function(f){return !f.silent&&!f.ghost});
   return R.filter(function(r){return r.p<=b.max&&r.d<=3}).map(function(r){var m=(K.my.indexOf(r.c)>=0||K.my.indexOf(r.c2)>=0?1:0);resp.forEach(function(f){if(f.likes.indexOf(r.c)>=0||f.likes.indexOf(r.c2)>=0)m++});return {r:r,m:m}}).sort(function(a,b){return b.m-a.m||b.r.s-a.r.s}).slice(0,4)}
 function kTally(){var t={};K.short.forEach(function(x){t[x.r.id]=0});Object.keys(K.votes).forEach(function(k){t[K.votes[k]]++});if(K.mine)t[K.mine]++;return t}
-function kClose(){var t=kTally(),max=-1,tied=[];K.short.forEach(function(x){var v=t[x.r.id];if(v>max){max=v;tied=[x.r.id]}else if(v===max)tied.push(x.r.id)});K.tie=tied.length>1;K.tied=tied;K.winner=K.tie?null:tied[0];ev('group_vote_closed',{votes:t,tie:K.tie,abstained:5-Object.keys(K.votes).length-(K.mine?1:0)})}
-function kSchedule(){var run=K.run;FRIENDS.forEach(function(f,i){if(f.silent)return;setTimeout(function(){if(K.run!==run||K.step!==3)return;var pick=K.short[0].r.id;for(var j=0;j<K.short.length;j++){var r=K.short[j].r;if(f.likes.indexOf(r.c)>=0||f.likes.indexOf(r.c2)>=0){pick=r.id;break}}K.votes[f.n]=pick;ev('group_vote_cast',{member:'synthetic_'+(i+1)});render()},900*(i+1))})}
-function kJoin(){var run=K.run;FRIENDS.forEach(function(f,i){setTimeout(function(){if(K.run!==run)return;K.joined=Math.max(K.joined,i+1);if(K.step===1)render()},700*(i+1))})}
+function kClose(by_){
+  var t=kTally(),max=-1,tied=[];K.short.forEach(function(x){var v=t[x.r.id];if(v>max){max=v;tied=[x.r.id]}else if(v===max)tied.push(x.r.id)});
+  K.tie=tied.length>1;K.tied=tied;K.winner=K.tie?null:tied[0];K.abst=kMembers()-kVoted();K.step=3;K.noResult=false;
+  ev('group_vote_closed',{group_id:'g'+K.run.toFixed(0).slice(-4),votes:t,tie:K.tie,abstained:K.abst,closed_by:by_});
+  if(K.tie){K.tieDeadline=Date.now()+FIVE;K.remind=true;ev('group_tie_reminder_shown',{group_id:'g'+K.run.toFixed(0).slice(-4)})}
+}
+function kSchedule(){var run=K.run;FRIENDS.slice(0,K.opened).forEach(function(f,i){if(f.silent||f.ghost)return;setTimeout(function(){if(K.run!==run||K.step!==2)return;var pick=K.short[0].r.id;for(var j=0;j<K.short.length;j++){var r=K.short[j].r;if(f.likes.indexOf(r.c)>=0||f.likes.indexOf(r.c2)>=0){pick=r.id;break}}K.votes[f.n]=pick;ev('group_vote_cast',{member:'synthetic_'+(i+1),is_change:false});render()},900*(i+1))})}
+function kJoin(){var run=K.run;FRIENDS.forEach(function(f,i){setTimeout(function(){if(K.run!==run)return;K.opened=Math.max(K.opened,i+1);M.opened++;ev('group_link_opened',{member_pseudo_id:'m'+(i+1),is_new_pseudo_id:true,is_existing_kinnai_user:false,in_app_browser:S.inApp});
+  if(!f.ghost){K.joined++;M.joined++;ev('group_joined',{member_pseudo_id:'m'+(i+1)});if(!f.silent){K.answered++;ev('group_preference_set',{member_pseudo_id:'m'+(i+1),cuisine_count:f.likes.length})}}
+  if(K.step===1&&!S.pov)render();M.dirty=1},700*(i+1))})}
+
+/* ---------- login offer (after a decision) ---------- */
+function offerAllowed(force){if(P.auth)return false;if(force)return true;return !(P.authDismissedAt&&Date.now()-P.authDismissedAt<DAY7)}
+function vOffer(trigger,force){
+  if(P.auth){return S.justSaved?'<div class="notice green">'+L('บันทึกแล้ว ครั้งหน้าข้อมูลของคุณจะตามไปทุกเครื่อง','Saved. Your data will follow you to any device.')+'</div>':''}
+  if(!offerAllowed(force))return '';
+  var key=trigger+':'+(trigger==='post_decision_solo'?S.sid:K.run);
+  if(S.offerKey!==key){S.offerKey=key;ev('auth_screen_shown',{trigger:trigger,in_app_browser:S.inApp})}
+  var h='<div class="card"><h3>'+L('บันทึกไว้จัดครั้งหน้า','Save this for next time')+'</h3><p class="sub">'+L('เข้าสู่ระบบแล้วกลุ่มและความชอบของคุณจะตามไปทุกเครื่อง ข้ามได้ ไม่กระทบผลที่ได้','Sign in to keep your groups and preferences on every device. Optional. Your result is unaffected.')+'</p>';
+  if(S.offer.msg)h+='<div class="notice coral">'+S.offer.msg+'</div>';
+  if(S.inApp){
+    h+='<div class="notice">'+L('คุณเปิดจากแอปแชต (เช่น LINE) Google ไม่อนุญาตให้เข้าสู่ระบบในหน้าต่างนี้ ต้องเปิดใน Safari/Chrome ข้อมูลที่ทำไว้ในหน้านี้จะไม่ตามไป','You opened this inside a chat app (e.g. LINE). Google does not allow sign-in here. Open it in Safari/Chrome. What you did here will not follow you.')+'</div><button class="btn" data-act="openext">'+L('เปิดใน Safari/Chrome','Open in Safari/Chrome')+'</button>';
+  }else if(S.offer.step){var n=PROV[S.offer.step];
+    h+='<div class="card"><span class="badge" style="align-self:flex-start">'+L('จำลองหน้ายืนยันของ '+n,'Simulated '+n+' prompt')+'</span><h3>'+L('ใช้บัญชี '+n+' กับ KinNai','Use your '+n+' account with KinNai')+'</h3><p class="sub">'+L('KinNai ได้รับเฉพาะรหัสบัญชีและชื่อที่แสดง ไม่ขออีเมลหรือเบอร์โทร','KinNai receives only an account ID and display name. No email or phone number.')+'</p><button class="btn" data-act="authok">'+(S.offer.step==='apple'?L('ยืนยันด้วย Face ID','Confirm with Face ID'):L('ดำเนินการต่อ','Continue'))+'</button><button class="btn ghost" data-act="authno">'+L('ยกเลิก','Cancel')+'</button></div>';
+  }else{
+    h+='<button class="btn dark" data-act="offerauth" data-v="apple">'+L('ดำเนินการต่อด้วย Apple','Continue with Apple')+'</button><button class="btn ghost" data-act="offerauth" data-v="google">'+L('ดำเนินการต่อด้วย Google','Continue with Google')+'</button><p class="sub" style="text-align:center;font-size:12px">'+L('เมื่อเข้าสู่ระบบ ถือว่าคุณรับทราบประกาศความเป็นส่วนตัว','By signing in you acknowledge the privacy notice.')+'</p>';
+  }
+  if(!force)h+='<button class="link" data-act="authlater" style="align-self:center">'+L('ไว้ทีหลัง','Not now')+'</button>';
+  return h+'</div>'}
 
 /* ---------- render: app ---------- */
 function chips(act,items,cur,label){return '<div class="chips">'+items.map(function(it){var on=Array.isArray(cur)?cur.indexOf(it.id)>=0:cur===it.id;return '<button class="chip" data-act="'+act+'" data-v="'+it.id+'" aria-pressed="'+on+'">'+(it.e?it.e+' ':'')+esc(label?label(it):nm(it))+'</button>'}).join('')+'</div>'}
@@ -256,56 +294,84 @@ function vDone(){
   h+='<div class="card"><h3>'+L('ร้านนี้ตรงใจไหม','Was this a good pick?')+'</h3><div class="row"><button class="chip" data-act="fb" data-v="up" aria-pressed="'+(S.fb==='up')+'">👍 '+L('ตรงใจ','Good pick')+'</button><button class="chip" data-act="fb" data-v="down" aria-pressed="'+(S.fb==='down')+'">👎 '+L('ยังไม่ใช่','Not really')+'</button></div>';
   if(S.fb==='down')h+='<span class="label">'+L('เพราะอะไร','Why?')+'</span>'+chips('fbr',[{id:'far',th:'ไกลไป',en:'Too far'},{id:'price',th:'แพงไป',en:'Too pricey'},{id:'type',th:'ไม่อยากกินแนวนี้',en:'Wrong cuisine'}],S.fbr);
   if(S.fb)h+='<div class="notice green">'+(S.fb==='up'?L('บันทึกแล้ว ครั้งหน้าจะดันร้านนี้ขึ้นก่อน','Saved. We will rank this place higher next time.'):L('บันทึกแล้ว จะไม่แนะนำร้านนี้อีก','Saved. We will stop suggesting this place.'))+'</div>';
-  h+='</div><button class="btn ghost" data-act="new">'+L('เริ่มมื้อใหม่','Start a new meal')+'</button>';
+  h+='</div>'+vOffer('post_decision_solo');
+  h+='<button class="btn ghost" data-act="new">'+L('เริ่มมื้อใหม่','Start a new meal')+'</button>';
   h+='<button class="link" data-act="dup" style="align-self:center">'+L('จำลองการกดยืนยันซ้ำ','Simulate a duplicate confirm')+'</button>';
   return h}
+function memberRow(f,joined){return '<div class="member"><div class="av">'+esc(nm({th:f.n,en:f.en}).charAt(0))+'</div><span>'+esc(nm({th:f.n,en:f.en}))+'</span>'+(f.ghost?'<span class="badge">'+L('เปิดลิงก์แล้ว ยังไม่เข้าร่วม','Opened, not joined')+'</span>':f.silent?'<span class="badge">'+L('เข้าร่วมแล้ว ยังไม่ตอบ','Joined, no reply')+'</span>':'<span class="meta">'+f.likes.map(function(c){return cu(c).e}).join(' ')+'</span>')+'</div>'}
 function vKampai(){
-  var names=[L('สร้าง','Create'),L('ชวน','Invite'),L('จับคู่','Match'),L('โหวต','Vote'),L('ยืนยัน','Confirm')],st=Math.min(K.step,4);
+  var names=[L('สร้าง','Create'),L('ชวน','Invite'),L('โหวต','Vote'),L('ยืนยัน','Confirm')],st=Math.min(K.step,3);
   var h='<div class="row split"><h2>Kampai</h2><span class="badge">'+L('ต้นแบบ · เพื่อนจำลอง','Prototype · simulated friends')+'</span></div>';
-  h+='<ol class="steps">'+names.map(function(n,i){return '<li class="'+(i===st?'on':i<st?'past':'')+'">'+(i+1)+' '+n+'</li>'}).join('')+'</ol>';
+  h+='<ol class="steps" style="grid-template-columns:repeat(4,1fr)">'+names.map(function(n,i){return '<li class="'+(i===st?'on':i<st?'past':'')+'">'+(i+1)+' '+n+'</li>'}).join('')+'</ol>';
   if(K.step===0){
-    h+='<p class="sub">'+L('ให้ทั้งกลุ่มเลือกร้านจบใน 5 นาที','Get the whole group to a decision in 5 minutes.')+'</p>';
+    h+='<p class="sub">'+L('ให้ทั้งกลุ่มเลือกร้านจบใน 5 นาที เพื่อนไม่ต้องลงแอปหรือสมัคร และคุณก็ไม่ต้อง login','Get the group to a decision in 5 minutes. Friends need no app or account, and neither do you.')+'</p>';
+    if(K.src)h+='<div class="notice green">'+L('คุณมาจากกลุ่มของพี่หมู ลองจัดนัดของคุณเองได้เลย','You came from P Moo\'s group. Try organizing your own.')+'</div>';
     h+='<div class="field"><label class="label" for="kname">'+L('ชื่อนัด','Meal name')+'</label><input class="input" id="kname" maxlength="40" value="'+esc(K.name)+'"></div>';
-    h+='<div class="field"><span class="label">'+L('งบต่อคน','Budget per person')+'</span>'+chips('kbud',BUD,K.bud)+'</div>';
+    h+='<div class="field"><span class="label">'+L('งบต่อคน (เพดาน)','Budget per person (cap)')+'</span>'+chips('kbud',BUD,K.bud)+'</div>';
     h+='<div class="field"><span class="label">'+L('ย่านที่นัด','Area')+'</span>'+chips('karea',AREAS,K.area)+'</div>';
     h+='<button class="btn" data-act="kcreate">'+L('สร้างกลุ่ม','Create group')+'</button>';
   }else if(K.step===1){
-    h+='<div class="card"><span class="label">'+L('ลิงก์ชวนเพื่อน (ตัวอย่าง ใช้งานจริงไม่ได้)','Invite link (example, not live)')+'</span><b style="word-break:break-all">kinnai.example/k/7QF2</b><div class="row"><button class="btn small ghost" data-act="kcopy">'+L('คัดลอกลิงก์','Copy link')+'</button><button class="btn small ghost" data-act="kline">'+L('ส่งเข้า LINE (จำลอง)','Share to LINE (simulated)')+'</button></div>'+(K.copy?'<span class="sub">'+K.copy+'</span>':'')+'</div>';
-    h+='<div class="card"><h3>'+esc(K.name)+' · '+(K.joined+1)+L(' คน',' people')+'</h3><div><div class="member"><div class="av">'+L('คุณ','Me').charAt(0)+'</div><span>'+L('คุณ (ผู้จัด)','You (organizer)')+'</span></div>'+kMembers().map(function(f){return '<div class="member"><div class="av">'+esc(nm({th:f.n,en:f.en}).charAt(0))+'</div><span>'+esc(nm({th:f.n,en:f.en}))+'</span><span class="badge green">'+L('เข้ากลุ่มแล้ว','Joined')+'</span></div>'}).join('')+'</div>'+(K.joined<FRIENDS.length?'<p class="sub">'+L('กำลังรอเพื่อนเข้ากลุ่ม...','Waiting for friends...')+'</p>':'')+'</div>';
-    h+='<button class="btn" data-act="kstart"'+(K.joined<2?' disabled':'')+'>'+L('เริ่มตัดสินใจ','Start deciding')+'</button><p class="sub" style="text-align:center;font-size:12px">'+L('เริ่มจับเวลา Group Time to Yes ตรงนี้','Group Time to Yes starts here')+'</p>';
-  }else if(K.step===2){
+    h+='<div class="card"><span class="label">'+L('ลิงก์ชวนเพื่อน (ตัวอย่าง ใช้งานจริงไม่ได้ หมดอายุใน 24 ชั่วโมง)','Invite link (example, not live, expires in 24 hours)')+'</span><b style="word-break:break-all">kinnai.example/k/7QF2</b><div class="row"><button class="btn small ghost" data-act="kcopy">'+L('คัดลอกลิงก์','Copy link')+'</button><button class="btn small ghost" data-act="kshare">'+L('แชร์เข้าแชต','Share to chat')+'</button><button class="btn small ghost" data-act="povstart">'+L('ลองเปิดลิงก์เป็นเพื่อน','Open as a friend')+'</button></div>'+(K.copy?'<span class="sub">'+K.copy+'</span>':'')+'</div>';
+    if(S.inApp)h+='<div class="notice">'+L('คุณเปิดจากแอปแชต เพื่อนที่เปิดลิงก์ในแอปแชตโหวตได้ครบโดยไม่ต้อง login','You are inside a chat app. Friends opening the link there can vote without signing in.')+'</div>';
+    h+='<div class="card"><h3>'+esc(K.name)+' · '+kMembers()+L(' คนตอบแล้ว',' answered')+'</h3><div><div class="member"><div class="av">'+L('คุณ','Me').charAt(0)+'</div><span>'+L('คุณ (ผู้จัด)','You (organizer)')+'</span><span class="meta">'+K.my.map(function(c){return cu(c).e}).join(' ')+'</span></div>'+FRIENDS.slice(0,K.opened).map(function(f){return memberRow(f)}).join('')+'</div>'+(K.opened<FRIENDS.length?'<p class="sub">'+L('กำลังรอเพื่อนเปิดลิงก์...','Waiting for friends to open the link...')+'</p>':'')+'</div>';
     h+='<div class="field"><span class="label">'+L('คุณอยากกินแนวไหน เลือกได้หลายอย่าง','What do you feel like? Pick any')+'</span>'+chips('kmy',CUIS.slice(1),K.my)+'</div>';
-    h+='<div class="card"><h3>'+L('คำตอบของเพื่อน','Friends\' answers')+'</h3><div>'+FRIENDS.map(function(f){return '<div class="member"><div class="av">'+esc(nm({th:f.n,en:f.en}).charAt(0))+'</div><span>'+esc(nm({th:f.n,en:f.en}))+'</span>'+(f.silent?'<span class="badge">'+L('ยังไม่ตอบ','No reply')+'</span>':'<span class="meta">'+f.likes.map(function(c){return cu(c).e+' '+nm(cu(c))}).join(' · ')+'</span>')+'</div>'}).join('')+'</div></div>';
-    h+='<button class="btn" data-act="kmatch"'+(K.my.length?'':' disabled')+'>'+L('หาร้านที่เข้ากับทุกคน','Find places that fit everyone')+'</button>';
+    h+='<button class="btn" data-act="kstart"'+(K.my.length&&K.answered>=1?'':' disabled')+'>'+L('เริ่มโหวต','Start voting')+'</button><p class="sub" style="text-align:center;font-size:12px">'+L('ต้องมีผู้ตอบอย่างน้อย 2 คนรวมคุณ · เริ่มจับเวลา Group Time to Yes ตรงนี้ · ปิดโหวตอัตโนมัติใน 5 นาที','Needs at least 2 answers including you · Group Time to Yes starts here · Voting auto-closes in 5 minutes')+'</p>';
+  }else if(K.step===2){
+    var t=kTally(),voted=kVoted(),mem=kMembers();
+    h+='<div class="row split"><h3>'+L('โหวตร้านที่อยากไป','Vote for a place')+'</h3><span class="meta">'+L('ปิดใน ','Closes in ')+'<span class="cd" id="cdVote">'+mmss(Math.max(0,K.deadline-Date.now()))+'</span></span></div>';
+    if(K.dlWarn)h+='<div class="notice">'+L('ถึงเวลาแล้วแต่มีเสียงน้อยกว่า 2 จึงไม่ปิดอัตโนมัติ ขยายเวลาหรือยกเลิกได้','Time is up but fewer than 2 voices, so it did not auto-close.')+'</div>';
+    K.short.forEach(function(x){var r=x.r,v=t[r.id];h+='<article class="card"><div class="rhead"><div class="thumb">'+cu(r.c).e+'</div><div><h3>'+esc(nm(r))+'</h3><div class="meta">฿'+r.p+L('/คน','/person')+' · '+dist(r)+' · '+L('ตรงใจ ','Fits ')+x.m+'/'+mem+L(' คน',' people')+'</div></div></div><div class="row"><div class="bar" style="flex:1"><b style="width:'+Math.min(100,v/mem*100)+'%"></b></div><span class="meta">'+v+L(' เสียง',' votes')+'</span></div><button class="btn small '+(K.mine===r.id?'':'ghost')+'" data-act="kvote" data-v="'+r.id+'">'+(K.mine===r.id?L('คุณโหวตร้านนี้','Your vote'):L('โหวตร้านนี้','Vote'))+'</button></article>'});
+    h+='<p class="sub">'+L('โหวตแล้ว '+voted+' จาก '+mem+' คน ผู้ที่ยังไม่โหวตเมื่อปิดนับเป็นงดออกเสียง · ต้นแบบ: โหวตร้านสุดท้ายในรายการเพื่อให้คะแนนเสมอ','Voted '+voted+' of '+mem+'. Non-voters count as abstaining when closed. Prototype tip: vote for the last place to force a tie.')+'</p>';
+    h+='<button class="btn" data-act="kclose"'+(voted>=2?'':' disabled')+'>'+L('ปิดโหวตและสรุปผล','Close voting')+'</button>';
   }else if(K.step===3){
-    var t=kTally(),voted=Object.keys(K.votes).length+(K.mine?1:0);
-    h+='<div class="row split"><h3>'+L('โหวตร้านที่อยากไป','Vote for a place')+'</h3><span class="meta">'+L('โหวตแล้ว ','Voted ')+voted+'/5</span></div>';
-    K.short.forEach(function(x){var r=x.r,v=t[r.id];h+='<article class="card"><div class="rhead"><div class="thumb">'+cu(r.c).e+'</div><div><h3>'+esc(nm(r))+'</h3><div class="meta">฿'+r.p+L('/คน','/person')+' · '+dist(r)+' · '+L('ตรงใจ ','Fits ')+x.m+L('/4 คนที่ตอบ','/4 who replied')+'</div></div></div><div class="row"><div class="bar" style="flex:1"><b style="width:'+(v/5*100)+'%"></b></div><span class="meta">'+v+L(' เสียง',' votes')+'</span></div><button class="btn small '+(K.mine===r.id?'':'ghost')+'" data-act="kvote" data-v="'+r.id+'">'+(K.mine===r.id?L('คุณโหวตร้านนี้','Your vote'):L('โหวตร้านนี้','Vote'))+'</button></article>'});
-    h+='<p class="sub">'+L('ฟ้ายังไม่ตอบ ถ้าปิดโหวตตอนนี้จะนับเป็นงดออกเสียง','Fah has not replied. Closing now counts Fah as abstaining.')+'</p>';
-    h+='<button class="btn" data-act="kclose"'+(K.mine?'':' disabled')+'>'+L('ปิดโหวตและสรุปผล','Close voting')+'</button>';
+    var w=K.winner?by(R,K.winner):null;
+    if(K.noResult){
+      h+='<div class="notice coral"><b>'+L('กลุ่มปิดโดยไม่มีผล','Group closed with no result')+'</b><br>'+L('คะแนนเท่ากันและผู้จัดไม่ได้เลือกภายใน 5 นาที ทุกคนในกลุ่มเห็นข้อความนี้','The vote was tied and the organizer did not choose within 5 minutes. Everyone in the group sees this.')+'</div><button class="btn" data-act="kback">'+L('เริ่มโหวตใหม่','Start a new vote')+'</button>';
+    }else if(!w){
+      h+='<div class="notice coral"><b>'+L('เตือนผู้จัด: คะแนนเท่ากัน ทุกคนกำลังรอคุณเลือก','Reminder: tied vote. Everyone is waiting for you to choose.')+'</b><br>'+L('เลือกภายใน ','Choose within ')+'<span class="cd" id="cdTie">'+mmss(Math.max(0,K.tieDeadline-Date.now()))+'</span>'+L(' ถ้าไม่เลือก กลุ่มจะปิดโดยไม่มีผลและเริ่มโหวตใหม่ได้',' or the group closes with no result and you can vote again.')+'</div>';
+      K.tied.forEach(function(id){var r=by(R,id);h+=rCard(r,1,'<button class="btn" data-act="kpick" data-v="'+r.id+'">'+L('เลือกร้านนี้','Choose this place')+'</button>')});
+      h+='<button class="btn ghost" data-act="kback">'+L('เริ่มโหวตใหม่','Vote again')+'</button>';
+    }else{
+      h+=rCard(w,0,'<div class="meta">'+travel(w)+' · '+L('ย่าน ','Area: ')+nm(by(AREAS,K.area))+'</div>')+'<button class="btn" data-act="kconfirm">'+L('ยืนยันร้านนี้ให้ทั้งกลุ่ม','Confirm for the group')+'</button><button class="btn ghost" data-act="kback">'+L('เริ่มโหวตใหม่','Vote again')+'</button>';
+    }
   }else{
-    var done=K.step===5,w=K.winner?by(R,K.winner):null;
-    if(!w){h+='<div class="notice">'+L('คะแนนเท่ากัน คุณเป็นผู้ตั้งนัด เลือกร้านที่จะไปได้เลย','Tied vote. As organizer, you choose.')+'</div>';K.tied.forEach(function(id){var r=by(R,id);h+=rCard(r,1,'<button class="btn" data-act="kpick" data-v="'+r.id+'">'+L('เลือกร้านนี้','Choose this place')+'</button>')});h+='<button class="btn ghost" data-act="kback">'+L('กลับไปโหวตใหม่','Reopen voting')+'</button>'}
-    else{h+=rCard(w,0,'<div class="meta">'+travel(w)+' · '+L('ย่าน','Area: ')+nm(by(AREAS,K.area))+'</div>');
-    if(!done)h+='<button class="btn" data-act="kconfirm">'+L('ยืนยันร้านนี้ให้ทั้งกลุ่ม','Confirm for the group')+'</button><button class="btn ghost" data-act="kback">'+L('กลับไปโหวตใหม่','Reopen voting')+'</button>';
-    else{h+='<div class="state" style="padding:4px 0"><span class="badge green">'+L('ทั้งกลุ่มได้ร้านแล้ว','Group decided')+'</span><div class="tty'+(K.tty>300000?' over':'')+'">'+mmss(K.tty)+'</div><p class="sub">'+L('Group Time to Yes · งดออกเสียง 1 จาก 5 คน','Group Time to Yes · 1 of 5 abstained')+'</p></div>';
-      h+='<a class="btn" data-act="kmap" target="_blank" rel="noopener" href="'+mapUrl(w,K.area)+'">'+L('แชร์แผนที่ให้กลุ่ม','Share map with group')+' ↗</a><button class="btn ghost" data-act="kcopy2">'+L('คัดลอกสรุปนัด','Copy summary')+'</button>'+(K.copy?'<span class="sub" style="text-align:center">'+K.copy+'</span>':'')}}
+    var w2=by(R,K.winner);
+    h+='<div class="state" style="padding:4px 0"><span class="badge green">'+L('ทั้งกลุ่มได้ร้านแล้ว','Group decided')+'</span></div>'+rCard(w2,0,'<div class="meta">'+travel(w2)+' · '+nm(by(AREAS,K.area))+'</div>');
+    h+='<div class="card"><div class="kv"><span>Group Time to Yes</span><span class="tty'+(K.tty>300000?' over':'')+'" style="font-size:20px">'+mmss(K.tty)+'</span></div><div class="kv"><span>'+L('รวมตั้งแต่สร้างกลุ่ม','From group creation')+'</span><span>'+mmss(K.e2e)+'</span></div><div class="kv"><span>'+L('งดออกเสียง','Abstained')+'</span><span>'+K.abst+L(' คน',' people')+'</span></div></div>';
+    h+='<a class="btn" data-act="kmap" target="_blank" rel="noopener" href="'+mapUrl(w2,K.area)+'">'+L('เปิดแผนที่','Open in Maps')+' ↗</a><button class="btn ghost" data-act="kcopy2">'+L('แชร์การ์ดสรุปเข้ากลุ่ม','Share result card')+'</button>'+(K.copy?'<span class="sub" style="text-align:center">'+K.copy+'</span>':'');
+    h+=vOffer('post_decision_group');
   }
-  if(K.step>0)h+='<button class="link" data-act="kreset" style="align-self:center">'+(K.step===5?L('สร้างนัดใหม่','New group'):L('ยกเลิกนัดนี้','Cancel this group'))+'</button>';
+  if(K.step>0)h+='<button class="link" data-act="kreset" style="align-self:center">'+(K.step===4?L('สร้างนัดใหม่','New group'):L('ยกเลิกนัดนี้','Cancel this group'))+'</button>';
   return h}
-function vLogin(){
-  var pr=S.pendingPick?by(R,+S.pendingPick):null;
-  var h='<div class="state" style="padding:36px 0 4px"><div class="big">'+(pr?cu(pr.c).e:'🍜')+'</div><h2>'+(pr?L('อีกขั้นเดียว ก็ได้ไป'+pr.th,'One step to '+pr.en):L('เข้าสู่ระบบ KinNai','Sign in to KinNai'))+'</h2><p class="sub">'+L('เข้าสู่ระบบครั้งเดียว เราจะจำร้านที่คุณเลือกและความชอบไว้ให้ทุกเครื่อง','Sign in once. We keep your picks and preferences on every device.')+'</p></div>';
-  if(S.authStep){var n=PROV[S.authStep];
-    h+='<div class="card"><span class="badge" style="align-self:flex-start">'+L('จำลองหน้ายืนยันของ '+n,'Simulated '+n+' prompt')+'</span><h3>'+L('ใช้บัญชี '+n+' กับ KinNai','Use your '+n+' account with KinNai')+'</h3><p class="sub">'+L('KinNai ได้รับเฉพาะรหัสบัญชีและชื่อที่แสดง ไม่ขออีเมลหรือเบอร์โทร','KinNai receives only an account ID and display name. No email or phone number.')+'</p><button class="btn" data-act="authok">'+(S.authStep==='apple'?L('ยืนยันด้วย Face ID','Confirm with Face ID'):L('ดำเนินการต่อ','Continue'))+'</button><button class="btn ghost" data-act="authno">'+L('ยกเลิก','Cancel')+'</button></div>';
+
+/* ---------- participant view (no login) ---------- */
+var PVG={name:'ข้าวเที่ยงทีม Ops',org:'พี่หมู',ids:[5,11,8,2],base:{5:1,11:2,8:0,2:1}};
+function newPV(){return {step:0,nick:'',my:[],vote:null,taps:0,result:null,tiebreak:false,run:Math.random()}}
+function pvTally(){var t={};PVG.ids.forEach(function(id){t[id]=PVG.base[id]});if(PV.vote)t[PV.vote]++;return t}
+function vPov(){
+  var h='<div class="povbar"><span>'+L('มุมมองเพื่อนที่เปิดลิงก์ (ต้นแบบ)','Friend\'s view of the link (prototype)')+'</span><button class="link" data-act="pexit" style="font-size:11.5px;padding:0">'+L('← กลับไปผู้จัด','← Back to organizer')+'</button></div>';
+  if(PV.step===0){
+    h+='<div class="state" style="padding:18px 0 0"><div class="big">🥂</div><h2>'+esc(PVG.name)+'</h2><p class="sub">'+L('ผู้จัด: '+PVG.org+' · ตอบแล้ว 3 คน · เหลือเวลา 4:30','Organizer: P Moo · 3 answered · 4:30 left')+'</p></div>';
+    if(S.inApp)h+='<div class="notice green">'+L('คุณเปิดจาก LINE ใช้งานได้ครบ ไม่ต้อง login','Opened from LINE. Everything works, no sign-in needed.')+'</div>';
+    h+='<div class="field"><label class="label" for="pnick">'+L('ชื่อเล่น (ไม่บังคับ)','Nickname (optional)')+'</label><input class="input" id="pnick" maxlength="20" placeholder="'+L('เพื่อน #4','Friend #4')+'" value="'+esc(PV.nick)+'"></div>';
+    h+='<button class="btn" data-act="pjoin">'+L('เข้าร่วม','Join')+'</button><p class="sub" style="text-align:center;font-size:12px">'+L('ไม่ต้องลงแอป ไม่ต้องสมัคร · ','No app, no account · ')+'<span style="text-decoration:underline">'+L('ประกาศความเป็นส่วนตัว','Privacy notice')+'</span></p>';
+  }else if(PV.step===1){
+    h+='<h3>'+L('คุณอยากกินแนวไหน แล้วโหวตร้านเลย','Pick what you feel like, then vote')+'</h3>'+chips('pcui',CUIS.slice(1),PV.my);
+    var t=pvTally();
+    PVG.ids.forEach(function(id){var r=by(R,id);h+='<article class="card"><div class="rhead"><div class="thumb">'+cu(r.c).e+'</div><div><h3>'+esc(nm(r))+'</h3><div class="meta">฿'+r.p+L('/คน','/person')+' · '+dist(r)+'</div></div></div><div class="row"><div class="bar" style="flex:1"><b style="width:'+(t[id]/4*100)+'%"></b></div><span class="meta">'+t[id]+L(' เสียง',' votes')+'</span></div><button class="btn small '+(PV.vote===id?'':'ghost')+'" data-act="pvote" data-v="'+id+'">'+L('โหวตร้านนี้','Vote')+'</button></article>'});
+    h+='<p class="sub" style="text-align:center;font-size:12px">'+L('แตะแล้ว '+PV.taps+' ครั้ง','Taps so far: '+PV.taps)+'</p>';
+  }else if(PV.step===2){
+    h+='<div class="state"><div class="big">⏳</div><h3>'+L('โหวตแล้ว รอผู้จัดปิดโหวต','Voted. Waiting for the organizer to close.')+'</h3><p class="sub">'+L('เห็นผลทันทีเมื่อปิด ไม่ต้อง login','You will see the result as soon as it closes. No sign-in.')+'</p></div>';
   }else{
-    if(S.authMsg)h+='<div class="notice coral">'+S.authMsg+'</div>';
-    h+='<button class="btn dark" data-act="auth" data-v="apple"> '+L('ดำเนินการต่อด้วย Apple','Continue with Apple')+'</button><button class="btn ghost" data-act="auth" data-v="google">'+L('ดำเนินการต่อด้วย Google','Continue with Google')+'</button>';
-    h+='<p class="sub" style="text-align:center;font-size:12px">'+L('เมื่อเข้าสู่ระบบ ถือว่าคุณรับทราบประกาศความเป็นส่วนตัว','By signing in you acknowledge the privacy notice.')+'</p><button class="link" data-act="authback" style="align-self:center">'+(pr?L('กลับไปดูร้าน','Back to the picks'):L('ไว้ทีหลัง','Not now'))+'</button>';
+    var r2=by(R,PV.result);
+    h+='<div class="state" style="padding:10px 0 0"><span class="badge green">'+L('กลุ่มได้ร้านแล้ว','Group decided')+'</span></div>'+rCard(r2,0,'<div class="meta">'+travel(r2)+' · '+nm(by(AREAS,'asok'))+'</div>'+(PV.tiebreak?'<div class="notice">'+L('คะแนนเท่ากัน ผู้จัดเลือกให้','Tied. The organizer chose.')+'</div>':''));
+    h+='<a class="btn" data-act="pmap" target="_blank" rel="noopener" href="'+mapUrl(r2,'asok')+'">'+L('เปิดแผนที่','Open in Maps')+' ↗</a><button class="btn ghost" data-act="pshare">'+L('แชร์ผลเข้าแชต','Share result')+'</button>';
+    h+='<div class="card"><h3>'+L('จัดนัดของคุณเอง','Organize your own')+'</h3><p class="sub">'+L('ใช้เวลาไม่ถึง 5 นาที เพื่อนไม่ต้องลงแอป','Under 5 minutes. Friends need no app.')+'</p><button class="btn" data-act="pcta">'+L('จัดนัดของคุณเอง','Create a group')+' →</button></div>';
   }
   return h}
+
 function vAccounts(){
-  if(!P.auth)return '<div class="card"><h3>'+L('ยังไม่ได้เข้าสู่ระบบ','Not signed in')+'</h3><p class="sub">'+L('เข้าสู่ระบบเพื่อเก็บร้านที่เลือกและความชอบไว้ข้ามเครื่อง ระบบจะถามอีกครั้งตอนคุณกดยืนยันร้านแรก','Sign in to keep your picks and preferences across devices. You will be asked when you confirm your first place.')+'</p><button class="btn" data-act="signin">'+L('เข้าสู่ระบบ','Sign in')+'</button></div>';
+  if(!P.auth)return '<div class="card"><h3>'+L('ยังไม่ได้เข้าสู่ระบบ','Not signed in')+'</h3><p class="sub">'+L('ข้อมูลของคุณอยู่ในเบราว์เซอร์นี้เท่านั้น ถ้าล้างข้อมูลเบราว์เซอร์จะหาย เข้าสู่ระบบเพื่อเก็บกลุ่มและความชอบไว้ข้ามเครื่อง','Your data lives in this browser only and is lost if you clear it. Sign in to keep it across devices.')+'</p>'+(S.meOffer?'':'<button class="btn" data-act="signin">'+L('เข้าสู่ระบบ','Sign in')+'</button>')+'</div>'+(S.meOffer?vOffer('me_tab',true):'');
   var ids=P.auth.ids,h='<div class="card"><h3>'+L('บัญชีที่เชื่อมไว้','Linked accounts')+'</h3><div>';
   ['apple','google'].forEach(function(k){var on=ids.indexOf(k)>=0;h+='<div class="member"><div class="av">'+PROV[k].charAt(0)+'</div><span>'+PROV[k]+'</span>'+(on?'<span class="badge green">'+L('เชื่อมแล้ว','Linked')+'</span>'+(ids.length>1?'<button class="link" data-act="unlink" data-v="'+k+'">'+L('ยกเลิก','Unlink')+'</button>':''):'<button class="btn small ghost" data-act="link" data-v="'+k+'">'+L('เชื่อมบัญชี','Link')+'</button>')+'</div>'});
   h+='</div>'+(ids.length===1?'<p class="sub">'+L('เชื่อมอีกช่องทางไว้ เผื่อเปลี่ยนเครื่องข้ามค่าย ต้องเหลืออย่างน้อย 1 ช่องทางเสมอ','Link the other one in case you switch platforms. At least one must stay linked.')+'</p>':'')+'<button class="link" data-act="signout" style="align-self:flex-start">'+L('ออกจากระบบ','Sign out')+'</button></div>';
@@ -313,41 +379,58 @@ function vAccounts(){
 function vMe(){
   var h='<h2>'+L('ของฉัน','Me')+'</h2>'+vAccounts();
   h+='<div class="card"><h3>'+L('ความชอบที่จำไว้','Saved preferences')+'</h3><div><div class="kv"><span>'+L('งบที่ใช้บ่อย','Usual budget')+'</span><span>'+nm(by(BUD,P.bud))+'</span></div><div class="kv"><span>'+L('แนวอาหาร','Cuisine')+'</span><span>'+nm(cu(P.cui))+'</span></div><div class="kv"><span>'+L('ระยะ','Distance')+'</span><span>'+P.rad+L(' กม.',' km')+'</span></div><div class="kv"><span>'+L('ร้านที่ถูกใจ','Liked')+'</span><span>'+(P.liked.map(function(i){return esc(nm(by(R,i)))}).join(', ')||'-')+'</span></div><div class="kv"><span>'+L('ร้านที่ไม่แนะนำอีก','Hidden')+'</span><span>'+(P.disliked.map(function(i){return esc(nm(by(R,i)))}).join(', ')||'-')+'</span></div></div></div>';
-  h+='<div class="card"><h3>'+L('มื้อล่าสุด','Recent decisions')+'</h3>'+(P.hist.length?'<div>'+P.hist.slice(0,5).map(function(x){return '<div class="kv"><span>'+esc(nm(by(R,x.rid)))+'</span><span class="meta">'+fmt(x.tty)+L(' วิ',' s')+'</span></div>'}).join('')+'</div>':'<p class="sub">'+L('ยังไม่มีมื้อที่ยืนยัน เลือกร้านแรกได้ที่แท็บ กินไหน','No confirmed meals yet. Pick your first on the Eat tab.')+'</p>')+'</div>';
+  h+='<div class="card"><h3>'+L('กลุ่มที่เคยจัด','Groups you organized')+'</h3>'+(P.groups.length?'<div>'+P.groups.slice(0,5).map(function(x){return '<div class="kv"><span>'+esc(x.name)+' → '+esc(nm(by(R,x.rid)))+'</span><span class="meta">'+mmss(x.tty)+'</span></div>'}).join('')+'</div>':'<p class="sub">'+L('ยังไม่มีกลุ่มที่ตัดสินใจแล้ว เริ่มได้ที่แท็บ Kampai','No decided groups yet. Start from the Kampai tab.')+'</p>')+'</div>';
+  h+='<div class="card"><h3>'+L('มื้อล่าสุด (Solo)','Recent solo decisions')+'</h3>'+(P.hist.length?'<div>'+P.hist.slice(0,5).map(function(x){return '<div class="kv"><span>'+esc(nm(by(R,x.rid)))+'</span><span class="meta">'+fmt(x.tty)+L(' วิ',' s')+'</span></div>'}).join('')+'</div>':'<p class="sub">'+L('ยังไม่มีมื้อที่ยืนยัน','No confirmed meals yet.')+'</p>')+'</div>';
   h+='<div class="card"><h3>'+L('ข้อมูลและความเป็นส่วนตัว','Data and privacy')+'</h3><p class="sub">'+L('ต้นแบบนี้เก็บความชอบและประวัติไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ได้ส่งตำแหน่งจริงออกไป','This prototype keeps preferences and history in this browser only. No real location is sent.')+'</p>'+(S.confirmDel?'<div class="notice coral">'+L('ลบบัญชี ความชอบ และประวัติทั้งหมด กู้คืนไม่ได้','This deletes your account, preferences and history for good.')+'<div class="row" style="margin-top:8px"><button class="btn small" data-act="del2">'+L('ลบเลย','Delete')+'</button><button class="btn small ghost" data-act="del0">'+L('ยกเลิก','Cancel')+'</button></div></div>':'<button class="btn ghost" data-act="del1">'+L('ลบบัญชีและข้อมูล','Delete account and data')+'</button>')+'</div>';
-  h+='<div class="card"><div class="row split"><h3>KinNai Plus</h3><span class="badge">'+L('ยังไม่เปิดใน MVP1','Not in MVP1')+'</span></div><p class="sub">'+L('ราคาที่เสนอ ฿99 ต่อเดือน ยังไม่มีการเก็บเงินในต้นแบบนี้','Proposed ฿99 per month. No payment exists in this prototype.')+'</p></div>';
   return h}
 function renderApp(){
-  var body=S.authGate?vLogin():S.tab==='kampai'?vKampai():S.tab==='me'?vMe():S.screen==='loading'?vLoading():S.screen==='error'?vError():S.screen==='results'?vResults():S.screen==='done'?vDone():vHome();
-  var tabs=[['solo','🍜',L('กินไหน','Eat')],['kampai','🥂','Kampai'],['me','👤',L('ฉัน','Me')]];
-  var el=document.getElementById('phone'),sc=el.querySelector('.screen'),top=sc?sc.scrollTop:0,key=S.tab+S.screen+K.step+(S.authGate?'g':'');
-  el.innerHTML='<div class="appbar"><span class="logo">KinNai</span><div class="lang" role="group" aria-label="Language"><button data-act="lang" data-v="th" aria-pressed="'+(P.lang==='th')+'">ไทย</button><button data-act="lang" data-v="en" aria-pressed="'+(P.lang==='en')+'">EN</button></div></div><div class="screen">'+body+'</div>'+(S.authGate?'':'<nav class="tabbar">'+tabs.map(function(t){return '<button data-act="tab" data-v="'+t[0]+'"'+(S.tab===t[0]?' aria-current="page"':'')+'><i>'+t[1]+'</i>'+t[2]+'</button>'}).join('')+'</nav>');
-  if(el.dataset.key===key)el.querySelector('.screen').scrollTop=top;el.dataset.key=key}
+  var body=S.pov?vPov():S.tab==='kampai'?vKampai():S.tab==='me'?vMe():S.screen==='loading'?vLoading():S.screen==='error'?vError():S.screen==='results'?vResults():S.screen==='done'?vDone():vHome();
+  var tabs=[['kampai','🥂','Kampai'],['solo','🍜',L('กินไหน','Eat')],['me','👤',L('ฉัน','Me')]];
+  var el=document.getElementById('phone'),sc=el.querySelector('.screen'),top=sc?sc.scrollTop:0,key=(S.pov?'p'+PV.step:S.tab+S.screen+K.step+(K.noResult?'n':'')+(S.offer.step||'')+(S.inApp?'i':''));
+  var act=document.activeElement,keepId=act&&act.id&&(act.id==='kname'||act.id==='pnick')?act.id:null,keepVal=keepId?act.value:null,keepPos=keepId?act.selectionStart:null;
+  el.innerHTML='<div class="appbar"><span class="logo">KinNai</span><div class="lang" role="group" aria-label="Language"><button data-act="lang" data-v="th" aria-pressed="'+(P.lang==='th')+'">ไทย</button><button data-act="lang" data-v="en" aria-pressed="'+(P.lang==='en')+'">EN</button></div></div><div class="screen">'+body+'</div>'+(S.pov?'':'<nav class="tabbar">'+tabs.map(function(t){return '<button data-act="tab" data-v="'+t[0]+'"'+(S.tab===t[0]?' aria-current="page"':'')+'><i>'+t[1]+'</i>'+t[2]+'</button>'}).join('')+'</nav>');
+  if(el.dataset.key===key)el.querySelector('.screen').scrollTop=top;el.dataset.key=key;
+  if(keepId){var n=document.getElementById(keepId);if(n){n.focus();try{n.setSelectionRange(keepPos,keepPos)}catch(e){}}}}
 
 /* ---------- render: console ---------- */
 function seg(act,items,cur){return '<div class="chips">'+items.map(function(it){return '<button class="chip" data-act="'+act+'" data-v="'+it[0]+'" aria-pressed="'+(cur===it[0])+'">'+it[1]+'</button>'}).join('')+'</div>'}
+function kPanel(){
+  var I=ratio(M.opened,M.groups),A=ratio(M.joined,M.opened),H=ratio(M.newOrg,M.joined),Kv=(I!==null&&A!==null&&H!==null)?I*A*H:null;
+  return '<section class="panel"><h3>ตัวชี้วัด K = I × A × H (ตัวอย่างจาก session นี้)</h3><div class="ktab"><div><b>'+M.groups+'</b><small>กลุ่มที่เริ่ม</small></div><div><b>'+M.opened+'</b><small>เปิดลิงก์ (ไม่ซ้ำ)</small></div><div><b>'+M.joined+'</b><small>เข้าร่วม</small></div><div><b>'+M.newOrg+'</b><small>ผู้จัดใหม่</small></div></div><div class="ktab"><div><b>'+f2(I)+'</b><small>I เปิดลิงก์ต่อกลุ่ม</small></div><div><b>'+f2(A)+'</b><small>A เข้าร่วม ÷ เปิด</small></div><div><b>'+f2(H)+'</b><small>H ผู้จัดใหม่ ÷ เข้าร่วม</small></div><div><b>'+f2(Kv)+'</b><small>K (เป้า ≥ 1.2)</small></div></div><p class="hint">ข้อมูลจำลองเพื่อดูวิธีคำนวณ ไม่ใช่ผลวัด จริงต้องใช้หลายกลุ่ม หลายเครือข่ายที่ไม่ทับซ้อน พร้อมช่วงความเชื่อมั่นและ saturation (ANALYTICS_PLAN §3) กดปุ่ม "จัดนัดของคุณเอง" ในมุมมองเพื่อนเพื่อให้เกิดผู้จัดใหม่</p></section>'}
 function renderConsole(){
-  var h='<section class="panel"><h3>Time to Yes</h3><div class="meters"><div class="meter"><small>Solo · เป้า ≤ 30 วินาที</small><div class="num" id="soloT">0.0 วิ</div><div class="bar green"><b id="soloB" style="width:0"></b></div></div><div class="meter"><small>Kampai · เป้า ≤ 5 นาที</small><div class="num" id="grpT">0:00</div><div class="bar green"><b id="grpB" style="width:0"></b></div></div></div><p class="hint">Solo เริ่มจับเวลาเมื่อกำหนดเงื่อนไขเสร็จ (กด "ช่วยเลือกให้หน่อย" ครั้งแรกของมื้อ) และหยุดเมื่อกด "กินร้านนี้" การแก้เงื่อนไขหรือขอชุดใหม่ไม่รีเซ็ตเวลา ครั้งแรกเวลาจะรวมขั้นตอน login ด้วย เวลาที่ได้จากข้อมูลจำลองไม่ใช่หลักฐานยืนยันเป้า 30 วินาที</p></section>';
-  h+='<section class="panel"><h3>จำลองสถานการณ์</h3><p class="hint">มีผลกับการค้นหาครั้งถัดไปในแท็บ กินไหน</p><span class="label">ผลการค้นหา</span>'+seg('scn',[['normal','ปกติ'],['slow','เน็ตช้า'],['few','เจอร้านเดียว'],['none','ไม่เจอร้าน'],['error','ระบบค้นหาล่ม']],S.scenario)+'<span class="label">สิทธิ์ตำแหน่ง</span>'+seg('loc',[['granted','อนุญาต'],['denied','ผู้ใช้ปฏิเสธ']],S.loc)+'</section>';
+  var h='<section class="panel"><h3>Time to Yes</h3><div class="meters"><div class="meter"><small>Kampai (เริ่มที่ "เริ่มโหวต") · เป้า ≤ 5 นาที</small><div class="num" id="grpT">0:00</div><div class="bar green"><b id="grpB" style="width:0"></b></div><small id="grpE">นับจากสร้างกลุ่ม: 0:00</small></div><div class="meter"><small>Solo · เป้า ≤ 30 วินาที (รอง)</small><div class="num" id="soloT">0.0 วิ</div><div class="bar green"><b id="soloB" style="width:0"></b></div></div></div><p class="hint">Group TTY เริ่มเมื่อผู้จัดกด "เริ่มโหวต" และมีตัวนับเวลารวมจากการสร้างกลุ่มเป็น guardrail (A-012) Solo เริ่มเมื่อกำหนดเงื่อนไขเสร็จ การขอ login เกิดหลังตัดสินใจจึงไม่อยู่ในเวลา ค่าที่ได้จากข้อมูลจำลองไม่ใช่หลักฐานยืนยันเป้า</p></section>';
+  h+='<section class="panel"><h3>จำลองสถานการณ์</h3><span class="label">เปิดแอปจาก</span>'+seg('app',[['web','เบราว์เซอร์ปกติ'],['line','LINE in-app browser']],S.inApp?'line':'web')+'<span class="label">ผลการค้นหา (แท็บ กินไหน)</span>'+seg('scn',[['normal','ปกติ'],['slow','เน็ตช้า'],['few','เจอร้านเดียว'],['none','ไม่เจอร้าน'],['error','ระบบค้นหาล่ม']],S.scenario)+'<span class="label">สิทธิ์ตำแหน่ง (แท็บ กินไหน)</span>'+seg('loc',[['granted','อนุญาต'],['denied','ผู้ใช้ปฏิเสธ']],S.loc)+'<span class="label">ทางลัดเวลา (ต้นแบบเท่านั้น)</span><div class="chips"><button class="chip" data-act="povstart">ดูมุมมองเพื่อนที่เปิดลิงก์</button><button class="chip" data-act="skipvote">ข้ามเวลาโหวต 5 นาที</button><button class="chip" data-act="skiptie">ข้ามเวลารอผู้จัด 5 นาที</button><button class="chip" data-act="rstdismiss">ล้างการกด "ไว้ทีหลัง"</button></div></section>';
+  h+=kPanel();
   h+='<section class="panel"><h3>Requirement ที่ลองแล้วในรอบนี้</h3><ul class="cov">'+REQ.map(function(r){return '<li class="'+(cov[r[0]]?'done':'')+'"><span class="dot"></span><code>'+r[0]+'</code><span class="t">'+r[1]+'</span></li>'}).join('')+'</ul></section>';
   h+='<section class="panel"><h3>Analytics events (จำลอง)</h3><div class="log">'+(log.length?log.map(function(e){return '<span class="d">+'+e.t+'s</span> <span class="n">'+e.n+'</span> <span class="d">'+esc(e.p)+'</span>'}).join('\n'):'<span class="d">ยังไม่มี event เริ่มใช้แอปด้านซ้ายเพื่อดู event ที่จะส่งเข้า PostHog</span>')+'</div></section>';
-  h+='<div class="two"><section class="panel"><h3>Founder ตัดสินแล้ว</h3><ul class="plain"><li>Solo TTY เริ่มเมื่อกำหนดเงื่อนไขเสร็จ</li><li>งบเป็นเพดาน ร้านที่ถูกกว่าก็แสดง</li><li>Kampai เสมอ: ผู้ตั้งนัดเป็นคนเลือก</li><li>คนไม่ตอบนับเป็นงดออกเสียง</li><li>Consent และ retention ทำตาม PDPA</li><li>Login ด้วย Apple หรือ Google ตอนกดยืนยันร้านครั้งแรก</li></ul></section><section class="panel"><h3>ยังเปิดอยู่</h3><ul class="plain"><li>ผู้ให้บริการ Places และเงื่อนไข license ในการแสดงผลและ cache</li><li>ระยะเวลาเก็บประวัติที่จะประกาศใน privacy notice</li><li>นโยบายอายุผู้ใช้ขั้นต่ำ</li><li>จะขออีเมลจาก Apple/Google หรือไม่</li></ul></section><section class="panel"><h3>ไม่อยู่ในต้นแบบนี้</h3><ul class="plain"><li>ข้อมูลร้านจริง GPS จริง และ backend</li><li>การ login จริงกับ Apple และ Google (หน้ายืนยันเป็นการจำลอง)</li><li>LINE Login (เลื่อนไปหลัง MVP1)</li><li>การชำระเงิน Plus และ Kampai Premium</li><li>Referral, affiliate, Merchant Pro</li><li>การแนะนำด้วย LLM</li></ul></section></div>';
+  h+='<div class="two"><section class="panel"><h3>Founder ตัดสินแล้ว</h3><ul class="plain"><li>Kampai-first (D-016)</li><li>ผู้ร่วมกลุ่มไม่ต้อง login ผู้จัดและ Solo ขอ login หลังตัดสินใจ ข้ามได้ (D-017)</li><li>เสมอ: ผู้จัดเลือก ถ้าไม่เลือกใน 5 นาทีกลุ่มปิดโดยไม่มีผลและโหวตใหม่ได้ (D-003, D-023)</li><li>ไม่ตอบ = งดออกเสียง (D-004)</li><li>งบเป็นเพดาน (D-002)</li><li>ถอด Plus, Kampai Premium, referral (D-018)</li><li>ใช้ชุดสีเดิมของแอป</li><li>PDPA ตามกฎหมาย (D-005)</li></ul></section><section class="panel"><h3>ยังเปิดอยู่</h3><ul class="plain"><li>Places provider: รอ API key เพื่อทดสอบข้อมูลจริง</li><li>ย่านเปิดตัว และเครือข่ายผู้ทดสอบ</li><li>Supabase region</li><li>จะขออีเมลจาก Apple/Google หรือไม่</li><li>ใช้โลโก้ K + Fork หรือโลโก้เดิม</li></ul></section><section class="panel"><h3>ไม่อยู่ในต้นแบบนี้</h3><ul class="plain"><li>ข้อมูลร้านจริง GPS จริง และ backend</li><li>ลิงก์และ realtime จริง (เพื่อนเป็นข้อมูลจำลอง)</li><li>login จริงกับ Apple และ Google</li><li>การเตือนผู้จัดนอกหน้าจอ (ไม่มี push ใน MVP1)</li><li>Intent Exchange, Workplace, การชำระเงิน</li><li>การแนะนำด้วย LLM</li></ul></section></div>';
   document.getElementById('console').innerHTML=h;tick()}
 function tick(){
+  var now=Date.now();
+  if(!S.pov&&K.step===2&&K.deadline&&now>=K.deadline&&!K.closing){
+    if(kVoted()>=2){K.closing=1;cov['GRP-005']=1;kClose('deadline');K.closing=0;render();return}
+    else if(!K.dlWarn){K.dlWarn=true;ev('group_deadline_reached_below_quorum',{voices:kVoted()});render();return}
+  }
+  if(K.step===3&&K.tie&&!K.winner&&!K.noResult&&K.tieDeadline&&now>=K.tieDeadline){K.noResult=true;cov['GRP-005']=1;ev('group_closed_no_result',{group_id:'g'+K.run.toFixed(0).slice(-4),reason:'tie_unresolved'});render();return}
+  var cv=document.getElementById('cdVote');if(cv)cv.textContent=mmss(Math.max(0,K.deadline-now));
+  var ct=document.getElementById('cdTie');if(ct)ct.textContent=mmss(Math.max(0,K.tieDeadline-now));
   var a=document.getElementById('soloT');if(!a)return;
-  var s=S.decision?S.decision.tty:S.tc?Date.now()-S.tc:0,g=K.tty!=null?K.tty:K.t0?Date.now()-K.t0:0;
+  var s=S.decision?S.decision.tty:S.tc?now-S.tc:0,g=K.tty!=null?K.tty:K.t0?now-K.t0:0;
   a.textContent=fmt(s)+' วิ';a.style.color=s>30000?'var(--coral)':'';
   var sb=document.getElementById('soloB');sb.style.width=Math.min(100,s/300)+'%';sb.style.background=s>30000?'var(--coral)':'';
   var b=document.getElementById('grpT');b.textContent=mmss(g);b.style.color=g>300000?'var(--coral)':'';
-  var gb=document.getElementById('grpB');gb.style.width=Math.min(100,g/3000)+'%';gb.style.background=g>300000?'var(--coral)':''}
+  var gb=document.getElementById('grpB');gb.style.width=Math.min(100,g/3000)+'%';gb.style.background=g>300000?'var(--coral)':'';
+  var ge=document.getElementById('grpE');if(ge){var e2=K.e2e!=null?K.e2e:K.tc0?now-K.tc0:0;ge.textContent='นับจากสร้างกลุ่ม: '+mmss(e2)}
+  if(M.dirty){M.dirty=0;renderConsole()}}
 function render(){renderApp();renderConsole()}
 
 /* ---------- actions ---------- */
 function abandon(){if(S.t0&&!S.decision){ev('session_abandoned',{session:'s'+S.sid,at_screen:S.screen})}}
 function copy(text,done){var ok=L('คัดลอกแล้ว','Copied'),no=L('คัดลอกอัตโนมัติไม่ได้: ','Could not copy automatically: ')+text;try{navigator.clipboard.writeText(text).then(function(){done(ok)},function(){done(no)})}catch(e){done(no)}}
+function gid(){return 'g'+K.run.toFixed(0).slice(-4)}
 var A={
   lang:function(v){P.lang=v;save()},
-  tab:function(v){S.tab=v;S.confirmDel=false},
+  tab:function(v){S.tab=v;S.confirmDel=false;S.meOffer=false},
   bud:function(v){touch();P.bud=v;save();ev('preference_set',{budget:v})},
   cui:function(v){touch();P.cui=v;save();ev('preference_set',{cuisine:v})},
   rad:function(v){touch();P.rad=+v;save();ev('preference_set',{radius_km:+v})},
@@ -356,43 +439,58 @@ var A={
   reroll:function(){search(true);return false},
   home:function(){S.screen='home'},
   relax:function(){var i=RAD.indexOf(P.rad);if(i<RAD.length-1)P.rad=RAD[i+1];else P.cui='any';if(S.scenario==='none'||S.scenario==='few')S.scenario='normal';save();ev('filters_relaxed',{radius_km:P.rad,cuisine:P.cui});S.seen=[];search(false);return false},
-  pick:function(v){if(!P.auth){S.pendingPick=v;S.authGate=true;S.authStep=null;S.authMsg=null;ev('auth_screen_shown',{trigger:'confirm_decision'});return}
+  pick:function(v){
     if(S.decision){ev('decision_confirmed',{ignored:'duplicate',decision_id:S.decision.id});return}
     var tty=Date.now()-S.tc;S.decision={id:'d'+S.sid,rid:+v,tty:tty};S.fb=null;S.fbr=null;S.screen='done';cov['SOLO-003']=1;
     P.hist.unshift({rid:+v,tty:tty});P.hist=P.hist.slice(0,10);save();
-    ev('decision_confirmed',{decision_id:'d'+S.sid,restaurant:+v,time_to_yes_ms:tty,within_target:tty<=30000,included_auth:!!S.viaAuth});S.viaAuth=false},
+    ev('decision_confirmed',{decision_id:'d'+S.sid,restaurant:+v,time_to_yes_ms:tty,within_target:tty<=30000})},
   dup:function(){ev('decision_confirmed',{ignored:'duplicate',decision_id:S.decision.id})},
   map:function(){cov['SOLO-004']=1;ev('map_opened',{decision_id:S.decision.id,provider:'google_maps'})},
   fb:function(v){var id=S.decision.rid;S.fb=v;S.fbr=null;cov['SOLO-005']=1;P.liked=P.liked.filter(function(x){return x!==id});P.disliked=P.disliked.filter(function(x){return x!==id});(v==='up'?P.liked:P.disliked).push(id);save();ev('feedback_submitted',{decision_id:S.decision.id,rating:v})},
   fbr:function(v){S.fbr=v;ev('feedback_reason',{decision_id:S.decision.id,reason:v})},
   'new':function(){abandon();S.t0=null;S.tc=null;S.decision=null;S.list=[];S.seen=[];S.screen='home';S.fb=null},
   del1:function(){S.confirmDel=true},del0:function(){S.confirmDel=false},
-  del2:function(){try{localStorage.removeItem(KEY)}catch(e){}var lang=P.lang;P={lang:lang,bud:'b2',cui:'any',rad:2,liked:[],disliked:[],hist:[]};S.confirmDel=false;ev('account_deleted',{scope:'account,preferences,history'})},
-  auth:function(v){S.authStep=v;S.authMsg=null;ev('auth_method_selected',{method:v})},
-  authok:function(){var m=S.authStep,v=S.pendingPick;P.auth={ids:[m]};S.authStep=null;S.authGate=false;S.pendingPick=null;cov['AUTH-001']=1;save();ev('auth_completed',{method:m,taps:2});if(v){S.viaAuth=true;A.pick(v)}},
-  authback:function(){ev('auth_dismissed',{had_pending_decision:!!S.pendingPick});S.authGate=false;S.pendingPick=null;S.authStep=null;S.authMsg=null},
-  signin:function(){S.authGate=true;S.authStep=null;S.authMsg=null;ev('auth_screen_shown',{trigger:'me_tab'})},
-  authno:function(){ev('auth_cancelled',{method:S.authStep});S.authMsg=L('ยังไม่ได้เข้าสู่ระบบ ลองอีกครั้งหรือเลือกอีกช่องทาง','You are not signed in yet. Try again or use the other option.');S.authStep=null},
+  del2:function(){try{localStorage.removeItem(KEY)}catch(e){}var lang=P.lang;P={lang:lang,auth:null,authDismissedAt:null,bud:'b2',cui:'any',rad:2,liked:[],disliked:[],hist:[],groups:[]};S.confirmDel=false;ev('account_deleted',{scope:'account,preferences,history,groups'})},
+  /* login offer */
+  offerauth:function(v){S.offer={step:v,msg:null};ev('auth_method_selected',{method:v})},
+  authok:function(){var m=S.offer.step;P.auth={ids:[m]};S.offer={step:null,msg:null};S.justSaved=true;S.meOffer=false;cov['AUTH-001']=1;save();ev('auth_completed',{method:m,is_new_user:true,taps:2})},
+  authno:function(){ev('auth_cancelled',{method:S.offer.step});S.offer={step:null,msg:L('ยังไม่ได้เข้าสู่ระบบ ลองอีกครั้งหรือข้ามได้ ผลที่ได้ไม่เปลี่ยน','Not signed in yet. Try again or skip. Your result is unchanged.')}},
+  authlater:function(){P.authDismissedAt=Date.now();save();S.offer={step:null,msg:null};ev('auth_dismissed',{trigger:S.offerKey?S.offerKey.split(':')[0]:'unknown'})},
+  openext:function(){ev('auth_open_external',{from:'in_app_browser'});S.inApp=false;S.offer={step:null,msg:L('เปิดในเบราว์เซอร์ใหม่แล้ว (จำลอง) เบราว์เซอร์ใหม่เป็น session ใหม่ ข้อมูลที่ทำไว้ในหน้าเดิมไม่ตามไป','Opened in a new browser (simulated). It is a new session, so what you did before does not follow.')}},
+  signin:function(){S.meOffer=true;S.offer={step:null,msg:null}},
   link:function(v){P.auth.ids.push(v);save();ev('identity_linked',{method:v})},
   unlink:function(v){if(P.auth.ids.length<2)return;P.auth.ids=P.auth.ids.filter(function(x){return x!==v});save();ev('identity_unlinked',{method:v})},
-  signout:function(){P.auth=null;save();ev('signed_out')},
+  signout:function(){P.auth=null;S.justSaved=false;save();ev('signed_out')},
+  rstdismiss:function(){P.authDismissedAt=null;save()},
   scn:function(v){S.scenario=v},
   loc:function(v){S.loc=v;if(v==='granted')S.area=null;ev('location_permission',{status:v})},
+  app:function(v){S.inApp=(v==='line');ev('sim_open_from',{in_app_browser:S.inApp})},
+  /* organizer */
   kbud:function(v){K.bud=v},karea:function(v){K.area=v},
-  kcreate:function(){K.step=1;cov['GRP-001']=1;ev('group_created',{budget:K.bud,area:K.area});kJoin()},
-  kcopy:function(){copy('kinnai.example/k/7QF2',function(m){K.copy=m;render()});ev('group_invite_shared',{channel:'copy_link'})},
-  kline:function(){K.copy=L('ต้นแบบไม่ได้ส่งข้อความจริง ในแอปจริงจะเปิด LINE share','Nothing was sent. The real app opens LINE share.');ev('group_invite_shared',{channel:'line_simulated'})},
-  kstart:function(){K.step=2;K.copy=null;K.t0=Date.now();ev('group_decision_start',{members:K.joined+1})},
+  kcreate:function(){K.step=1;K.tc0=Date.now();M.groups++;if(K.src)M.newOrg++;cov['ANL-002']=1;ev('group_created',{group_id:gid(),budget:K.bud,area:K.area,source_group_id:K.src,organizer_logged_in:!!P.auth});kJoin()},
+  kcopy:function(){copy('kinnai.example/k/7QF2',function(m){K.copy=m;render()});ev('group_invite_shared',{group_id:gid(),channel:'copy_link'})},
+  kshare:function(){var done=function(m){K.copy=m;render()};if(navigator.share){navigator.share({title:K.name,url:'https://kinnai.example/k/7QF2'}).then(function(){done(L('แชร์แล้ว','Shared'))},function(){done(L('ยกเลิกการแชร์','Share cancelled'))});ev('group_invite_shared',{group_id:gid(),channel:'web_share'})}else{copy('kinnai.example/k/7QF2',done);ev('group_invite_shared',{group_id:gid(),channel:'copy_link'})}},
+  kstart:function(){K.copy=null;K.t0=Date.now();K.deadline=K.t0+FIVE;K.short=kShort();K.step=2;K.votes={};K.mine=null;K.dlWarn=false;ev('group_decision_start',{group_id:gid(),members:kMembers()});ev('group_shortlist_shown',{group_id:gid(),count:K.short.length,latency_ms:420});kSchedule()},
   kmy:function(v){var i=K.my.indexOf(v);if(i>=0)K.my.splice(i,1);else K.my.push(v)},
-  kmatch:function(){K.short=kShort();K.step=3;K.votes={};K.mine=null;ev('group_shortlist_shown',{count:K.short.length,responded:4,pending:1});kSchedule()},
-  kvote:function(v){K.mine=+v;ev('group_vote_cast',{member:'organizer',restaurant:+v})},
-  kclose:function(){kClose();K.step=4},
-  kpick:function(v){K.winner=+v;ev('group_tie_broken',{by:'organizer',restaurant:+v})},
-  kback:function(){K.step=3;K.winner=null;ev('group_vote_reopened')},
-  kconfirm:function(){K.tty=Date.now()-K.t0;K.step=5;ev('group_decision_confirmed',{restaurant:K.winner,time_to_yes_ms:K.tty,within_target:K.tty<=300000,abstained:1,tie_broken_by_organizer:K.tie})},
-  kmap:function(){ev('group_map_shared',{restaurant:K.winner})},
-  kcopy2:function(){var w=by(R,K.winner);copy(K.name+' → '+nm(w)+' ('+nm(by(AREAS,K.area))+') ฿'+w.p+L('/คน','/person'),function(m){K.copy=m;render()})},
-  kreset:function(){if(K.step<5)ev('group_cancelled',{at_step:K.step,elapsed_ms:K.t0?Date.now()-K.t0:0});K=newK()}
+  kvote:function(v){var ch=!!K.mine;K.mine=+v;ev('group_vote_cast',{group_id:gid(),member:'organizer',is_change:ch})},
+  kclose:function(){if(kVoted()<2)return;kClose('organizer')},
+  kpick:function(v){K.winner=+v;K.tieDeadline=null;ev('group_tie_broken',{group_id:gid(),by:'organizer'})},
+  kback:function(){K.step=2;K.votes={};K.mine=null;K.winner=null;K.tie=false;K.noResult=false;K.dlWarn=false;K.remind=false;K.tieDeadline=null;K.deadline=Date.now()+FIVE;K.run=K.run;ev('group_vote_restarted',{group_id:gid()});kSchedule()},
+  kconfirm:function(){var n=Date.now();K.tty=n-K.t0;K.e2e=n-K.tc0;K.step=4;cov['GRP-002']=1;P.groups.unshift({name:K.name,rid:K.winner,tty:K.tty});P.groups=P.groups.slice(0,10);save();ev('group_decision_confirmed',{group_id:gid(),time_to_yes_ms:K.tty,within_5min:K.tty<=FIVE,abstained:K.abst,tie_broken_by_organizer:K.tie})},
+  kmap:function(){cov['SOLO-004']=1;ev('map_opened',{group_id:gid(),provider:'google_maps'})},
+  kcopy2:function(){var w=by(R,K.winner);cov['GRP-004']=1;ev('group_result_shared',{group_id:gid(),channel:'copy'});copy(K.name+' → '+nm(w)+' ('+nm(by(AREAS,K.area))+') ฿'+w.p+L('/คน','/person'),function(m){K.copy=m;render()})},
+  kreset:function(){if(K.step<4)ev('group_cancelled',{group_id:gid(),at_step:K.step,elapsed_ms:K.t0?Date.now()-K.t0:0});S.fromPov=false;K=newK()},
+  skipvote:function(){if(K.step===2)K.deadline=Date.now()-1},
+  skiptie:function(){if(K.step===3&&K.tie&&!K.winner)K.tieDeadline=Date.now()-1},
+  /* participant view */
+  povstart:function(){if(S.pov)return;S.pov=true;PV=newPV();M.groups++;M.opened++;ev('group_link_opened',{group_id:'g_pov',member_pseudo_id:'me',is_new_pseudo_id:true,in_app_browser:S.inApp});M.dirty=1},
+  pexit:function(){S.pov=false;PV=null},
+  pjoin:function(){var n=document.getElementById('pnick');PV.nick=n?n.value:'';PV.step=1;PV.taps++;M.joined++;cov['GRP-003']=1;ev('group_joined',{group_id:'g_pov',member_pseudo_id:'me',has_nickname:!!PV.nick});M.dirty=1},
+  pcui:function(v){var i=PV.my.indexOf(v);if(i>=0)PV.my.splice(i,1);else if(PV.my.length<2)PV.my.push(v);PV.taps++},
+  pvote:function(v){PV.vote=+v;PV.taps++;ev('group_preference_set',{group_id:'g_pov',cuisine_count:PV.my.length});ev('group_vote_cast',{group_id:'g_pov',member_pseudo_id:'me',is_change:false,taps_since_open:PV.taps});PV.step=2;var run=PV.run;setTimeout(function(){if(!S.pov||!PV||PV.run!==run)return;var t=pvTally(),max=-1,tied=[];PVG.ids.forEach(function(id){if(t[id]>max){max=t[id];tied=[id]}else if(t[id]===max)tied.push(id)});PV.tiebreak=tied.length>1;tied.sort(function(a,b){return by(R,b).s-by(R,a).s});PV.result=tied[0];PV.step=3;ev('group_decision_confirmed',{group_id:'g_pov',viewer:'participant'});render()},2500);M.dirty=1},
+  pmap:function(){ev('map_opened',{group_id:'g_pov',provider:'google_maps'})},
+  pshare:function(){cov['GRP-004']=1;ev('group_result_shared',{group_id:'g_pov',channel:'copy'});copy('kinnai.example/k/7QF2',function(){})},
+  pcta:function(){cov['GRP-004']=1;M.cta++;ev('group_cta_create_clicked',{group_id:'g_pov',source_group_id:'g_pov'});S.pov=false;PV=null;S.fromPov=true;S.tab='kampai';K=newK();M.dirty=1}
 };
 document.addEventListener('click',function(e){
   var b=e.target.closest('[data-act]');if(!b||b.disabled)return;
@@ -400,7 +498,7 @@ document.addEventListener('click',function(e){
   if(r===false)return;
   if(b.tagName==='A')setTimeout(render,80);else render();
 });
-document.addEventListener('input',function(e){if(e.target.id==='kname')K.name=e.target.value});
+document.addEventListener('input',function(e){if(e.target.id==='kname')K.name=e.target.value;if(e.target.id==='pnick'&&PV)PV.nick=e.target.value});
 setInterval(tick,100);
 render();
 })();

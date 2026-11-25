@@ -25,8 +25,8 @@
 | 17 | SOLO-005 | Feedback, ความชอบ, เมนู "ฉัน" | Low | Should | SOLO-003 | Build | |
 | 18 | AUTH-001 | Login Apple/Google หลังตัดสินใจสำเร็จ (ข้ามได้), ผูก anonymous เข้าบัญชี, เชื่อมบัญชี, ออกจากระบบ, ลบบัญชี + ตั้งค่า credentials ของ Apple Developer และ Google Cloud | Medium | Must | PLAT-001, PLAT-002 | Build | |
 | 19 | INT-001 | โครงข้อมูล intent ของกลุ่มแบบรวมไม่ระบุตัวบุคคล (ไม่ขาย ไม่แสดง offer) | Medium | Should | GRP-002, SPIKE-002 | Build | |
-| 20 | BRAND-001 | ชุดแบรนด์ตาม strategy: tokens, โลโก้ K + Fork เป็น vector, ไอคอน PWA | Medium | Should | PLAT-001 | Build | |
-| 21 | GRP-001 | Kampai prototype (HTML) แบบอ้างอิงของ GRP-002 | Low | Could | — | **ส่งมอบแล้ว** (ต้นแบบยังไม่ปรับตาม D-016 ถึง D-022) | |
+| 20 | BRAND-001 | ไอคอน PWA และโลโก้ (ใช้ชุดสีเดิม D-019 โลโก้ตาม Q-019) | Medium | Should | PLAT-001 | Build | |
+| 21 | GRP-001 | Kampai prototype (HTML) แบบอ้างอิงของ GRP-002 | Low | Could | — | **ส่งมอบแล้ว** (ปรับตาม D-016 ถึง D-023 แล้ว) | |
 | 22 | REL-001 | เปิด web beta: โดเมน production, hosting, privacy policy, หน้าลบบัญชี, consent banner, ทดสอบบน LINE in-app browser | Medium | Must | ทุกรายการ Must | Gate 4 | |
 | 23 | OPS-001 | Runbook: kill switch, cost alert, แจ้งเหตุละเมิดข้อมูล | Medium | Must | PLAT-003, PRIV-001 | Gate 4 | |
 | 24 | UXR-001 | แผนทดสอบผู้ใช้จริง: 2–3 เครือข่ายที่ไม่ทับซ้อน (D-022), จำนวน, สคริปต์, เกณฑ์ผ่านของ H-007 ถึง H-009 และ H-001 | Medium | Should | — | ก่อน Gate 4 | |
